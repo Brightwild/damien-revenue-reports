@@ -139,6 +139,7 @@
 <body>
     <div class="header">
         <h1>📊 Damien's Sunday Reports</h1>
+        <p>Complete Portfolio + 5 Unit Groups</p>
         <p>Revenue Analysis Dashboard • Updated Every Sunday at 8:00 AM ET</p>
     </div>
 
@@ -148,6 +149,13 @@
         </div>
 
         <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">🏆 ALL PROPERTIES COMBINED - 2026 Revenue Analysis</div>
+                <div class="chart-container">
+                    <canvas id="allPropertiesChart"></canvas>
+                </div>
+            </div>
+            
             <div class="chart-card">
                 <div class="chart-title">KHE Original 10 Units - 2026 Revenue Analysis</div>
                 <div class="chart-container">
@@ -313,6 +321,7 @@
 
         function createCharts() {
             const chartConfigs = [
+                { id: 'allPropertiesChart', data: revenueData.unitGroups['ALL_PROPERTIES'] },
                 { id: 'kheChart', data: revenueData.unitGroups['KHE_ORIGINAL_10'] },
                 { id: 'gemmaChart', data: revenueData.unitGroups['GEMMA_4_UNITS'] },
                 { id: 'hcChart', data: revenueData.unitGroups['HC_50_UNITS'] },

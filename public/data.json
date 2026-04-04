@@ -1,6 +1,13 @@
 {
-  "lastUpdated": "2026-04-04T18:19:00.000Z",
+  "lastUpdated": "2026-04-04T18:35:00.000Z",
   "unitGroups": {
+    "ALL_PROPERTIES": {
+      "name": "All Properties Combined",
+      "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      "cy": [4994710, 5553893, 6022754, 4029972, 2100895, 1403176, 1069605, 708209, 445876, 498170, 390056, 351002],
+      "stly": [1046654, 520450, 822006, 799163, 594920, 271330, 758569, 462128, 158297, 315226, 262925, 256880],
+      "lyFinal": [4533934, 4781256, 5516888, 4302333, 3327800, 3128585, 3764378, 2501340, 1629063, 2415479, 3269381, 4651027]
+    },
     "KHE_ORIGINAL_10": {
       "name": "KHE Original 10",
       "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
