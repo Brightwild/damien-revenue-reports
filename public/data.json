@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-04T19:19:00.000Z",
+  "lastUpdated": "2026-04-04T20:54:00.000Z",
   "unitGroups": {
     "ALL_PROPERTIES": {
       "name": "All Properties Combined",
@@ -42,6 +42,27 @@
       "cy": [28536, 31647, 26890, 25119, 16799, 7924, 0, 874, 5605, 7556, 5575, 3397],
       "stly": [25559, 20602, 26598, 11276, 7646, 3492, 6251, 0, 0, 0, 0, 0],
       "lyFinal": [25559, 20602, 26598, 16347, 13475, 10679, 13866, 8148, 5906, 10503, 18035, 18544]
+    },
+    "BEACHSIDE_ALL": {
+      "name": "Beachside All",
+      "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      "cy": [2271323, 2495394, 2558766, 1100242, 139689, 93167, 86545, 37757, 15755, 49340, 41411, 37146],
+      "stly": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "lyFinal": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    "LUNARA_BAY_ALL": {
+      "name": "Lunara Bay All",
+      "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      "cy": [1090848, 1190384, 1330642, 1109936, 639351, 440418, 425944, 347754, 228634, 174154, 200574, 137913],
+      "stly": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "lyFinal": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    "CURRY_MANSION_ALL": {
+      "name": "Curry Mansion All",
+      "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      "cy": [336566, 352327, 366693, 220683, 114371, 43105, 15439, 9032, 12515, 67200, 17509, 8509],
+      "stly": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "lyFinal": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
   }
 }
