@@ -94,7 +94,7 @@
         
         .charts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            grid-template-columns: 1fr;
             gap: 2rem;
             margin-bottom: 3rem;
         }
@@ -116,7 +116,7 @@
         
         .chart-container {
             position: relative;
-            height: 400px;
+            height: 700px;
         }
         
         .last-updated {
@@ -149,35 +149,35 @@
 
         <div class="charts-grid">
             <div class="chart-card">
-                <div class="chart-title">KHE Original 10 Units</div>
+                <div class="chart-title">KHE Original 10 Units - 2026 Revenue Analysis</div>
                 <div class="chart-container">
                     <canvas id="kheChart"></canvas>
                 </div>
             </div>
 
             <div class="chart-card">
-                <div class="chart-title">Gemma (4 Units)</div>
+                <div class="chart-title">Gemma (4 Units) - 2026 Revenue Analysis</div>
                 <div class="chart-container">
                     <canvas id="gemmaChart"></canvas>
                 </div>
             </div>
 
             <div class="chart-card">
-                <div class="chart-title">Hotel Cabana HC 50 Units</div>
+                <div class="chart-title">Hotel Cabana HC 50 Units - 2026 Revenue Analysis</div>
                 <div class="chart-container">
                     <canvas id="hcChart"></canvas>
                 </div>
             </div>
 
             <div class="chart-card">
-                <div class="chart-title">720 D Simonton</div>
+                <div class="chart-title">720 D Simonton - 2026 Revenue Analysis</div>
                 <div class="chart-container">
                     <canvas id="simontonChart"></canvas>
                 </div>
             </div>
 
             <div class="chart-card">
-                <div class="chart-title">Kamp (430 Fleming)</div>
+                <div class="chart-title">Kamp (430 Fleming) - 2026 Revenue Analysis</div>
                 <div class="chart-container">
                     <canvas id="kampChart"></canvas>
                 </div>
@@ -205,44 +205,44 @@
                 initializeDashboard();
             } catch (error) {
                 console.error('Error loading data:', error);
-                // Fallback demo data
+                // Use the real data as fallback
                 revenueData = {
                     lastUpdated: new Date().toISOString(),
                     unitGroups: {
                         'KHE_ORIGINAL_10': {
                             name: 'KHE Original 10',
-                            months: ['Jan', 'Feb', 'Mar'],
-                            cy: [365708, 424705, 472814],
-                            stly: [284938, 258895, 421295],
-                            lyFinal: [284938, 258895, 421295]
+                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                            cy: [365708, 424705, 472814, 64733, 0, 0, 0, 0, 0, 0, 0, 0],
+                            stly: [284938, 258895, 421295, 66218, 0, 0, 0, 0, 0, 0, 0, 0],
+                            lyFinal: [284938, 258895, 421295, 321808, 293690, 259219, 377162, 254721, 126405, 159753, 229843, 336272]
                         },
                         'GEMMA_4_UNITS': {
                             name: 'Gemma (4 Units)',
-                            months: ['Jan', 'Feb', 'Mar'],
-                            cy: [81528, 108047, 219379],
-                            stly: [48236, 121149, 221999],
-                            lyFinal: [48236, 121149, 221999]
+                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                            cy: [81528, 108047, 219379, 34504, 0, 0, 0, 0, 0, 0, 0, 0],
+                            stly: [48236, 121149, 221999, 19207, 0, 0, 0, 0, 0, 0, 0, 0],
+                            lyFinal: [48236, 121149, 221999, 149100, 134860, 158625, 187435, 91439, 43075, 64958, 101188, 119733]
                         },
                         'HC_50_UNITS': {
                             name: 'Hotel Cabana HC 50',
-                            months: ['Jan', 'Feb', 'Mar'],
-                            cy: [12477, 41251, 84818],
-                            stly: [0, 0, 0],
-                            lyFinal: [0, 0, 0]
+                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                            cy: [12477, 41251, 84818, 10530, 0, 0, 0, 0, 0, 0, 0, 0],
+                            stly: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            lyFinal: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                         },
                         '720_D_SIMONTON': {
                             name: '720 D Simonton',
-                            months: ['Jan', 'Feb', 'Mar'],
-                            cy: [51445, 45977, 47899],
-                            stly: [49642, 45440, 52048],
-                            lyFinal: [49642, 45440, 52048]
+                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                            cy: [51445, 45977, 47899, 9516, 0, 0, 0, 0, 0, 0, 0, 0],
+                            stly: [49642, 45440, 52048, 6540, 0, 0, 0, 0, 0, 0, 0, 0],
+                            lyFinal: [49642, 45440, 52048, 41552, 33216, 34595, 26944, 26883, 19970, 33989, 33563, 38461]
                         },
                         'KAMP_430_FLEMING': {
                             name: 'Kamp (430 Fleming)',
-                            months: ['Jan', 'Feb', 'Mar'],
-                            cy: [28536, 31647, 26890],
-                            stly: [26086, 20769, 27674],
-                            lyFinal: [26086, 20769, 27674]
+                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                            cy: [28536, 31647, 26890, 3183, 0, 0, 0, 0, 0, 0, 0, 0],
+                            stly: [26086, 20769, 27674, 3300, 0, 0, 0, 0, 0, 0, 0, 0],
+                            lyFinal: [26086, 20769, 27674, 16347, 12631, 11523, 13306, 8708, 5906, 10503, 17008, 17749]
                         }
                     }
                 };
@@ -259,21 +259,24 @@
         function updateStatsOverview() {
             const statsContainer = document.getElementById('statsOverview');
             
-            // Calculate totals
+            // Calculate totals for full year
             let totalCY = 0, totalSTLY = 0, totalLYFinal = 0;
+            const allMonths = 12; // Full year
             
             Object.values(revenueData.unitGroups).forEach(group => {
-                totalCY += group.cy.reduce((a, b) => a + b, 0);
-                totalSTLY += group.stly.reduce((a, b) => a + b, 0);
-                totalLYFinal += group.lyFinal.reduce((a, b) => a + b, 0);
+                for(let i = 0; i < allMonths; i++) {
+                    totalCY += group.cy[i] || 0;
+                    totalSTLY += group.stly[i] || 0;
+                    totalLYFinal += group.lyFinal[i] || 0;
+                }
             });
 
-            const cyChange = ((totalCY - totalLYFinal) / totalLYFinal * 100).toFixed(1);
-            const stlyChange = ((totalCY - totalSTLY) / totalSTLY * 100).toFixed(1);
+            const cyChange = totalLYFinal > 0 ? ((totalCY - totalLYFinal) / totalLYFinal * 100).toFixed(1) : 0;
+            const stlyChange = totalSTLY > 0 ? ((totalCY - totalSTLY) / totalSTLY * 100).toFixed(1) : 0;
 
             const stats = [
                 {
-                    title: 'Total CY Revenue',
+                    title: 'Total CY Revenue (2026)',
                     value: formatCurrency(totalCY),
                     change: `${cyChange}% vs LY Final`,
                     changeClass: cyChange >= 0 ? 'positive' : 'negative'
@@ -285,13 +288,14 @@
                     changeClass: stlyChange >= 0 ? 'positive' : 'negative'
                 },
                 {
-                    title: 'Best Performer',
+                    title: 'Best Performer (2026)',
                     value: 'KHE Original 10',
-                    change: formatCurrency(Math.max(...Object.values(revenueData.unitGroups).map(g => g.cy.reduce((a,b) => a + b, 0)))),
+                    change: formatCurrency(Math.max(...Object.values(revenueData.unitGroups).map(g => 
+                        g.cy.reduce((sum, val) => sum + (val || 0), 0)))),
                     changeClass: 'positive'
                 },
                 {
-                    title: 'Growth Opportunity',
+                    title: 'Growth Story',
                     value: 'HC 50 Units',
                     change: 'New in 2026',
                     changeClass: 'neutral'
@@ -322,62 +326,133 @@
         }
 
         function createChart(canvasId, data) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+
+            const chartCtx = ctx.getContext('2d');
             
-            new Chart(ctx, {
+            // Colors matching the screenshot: Dark navy, medium blue, light blue
+            const colors = {
+                cy: '#1e3a8a',      // Dark navy (2026 Rev)
+                stly: '#3b82f6',    // Medium blue (STLY) 
+                lyFinal: '#93c5fd'  // Light blue (LY Final)
+            };
+
+            const chart = new Chart(chartCtx, {
                 type: 'bar',
                 data: {
-                    labels: data.months.map(m => `${m} 2026`),
+                    labels: data.months,
                     datasets: [
                         {
-                            label: 'CY 2026',
+                            label: '2026 Rev',
                             data: data.cy,
-                            backgroundColor: '#4472C4',
-                            borderColor: '#4472C4',
-                            borderWidth: 1
+                            backgroundColor: colors.cy,
+                            borderColor: colors.cy,
+                            borderWidth: 0
                         },
                         {
-                            label: 'STLY 2025',
+                            label: 'STLY',
                             data: data.stly,
-                            backgroundColor: '#E2692F',
-                            borderColor: '#E2692F',
-                            borderWidth: 1
+                            backgroundColor: colors.stly,
+                            borderColor: colors.stly,
+                            borderWidth: 0
                         },
                         {
-                            label: 'LY Final 2025',
+                            label: 'LY Final',
                             data: data.lyFinal,
-                            backgroundColor: '#70AD47',
-                            borderColor: '#70AD47',
-                            borderWidth: 1
+                            backgroundColor: colors.lyFinal,
+                            borderColor: colors.lyFinal,
+                            borderWidth: 0
                         }
                     ]
                 },
                 options: {
+                    indexAxis: 'y', // Horizontal bars
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
-                                }
-                            }
-                        }
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
                     },
                     scales: {
-                        y: {
+                        x: {
                             beginAtZero: true,
+                            stacked: false,
                             ticks: {
                                 callback: function(value) {
                                     return formatCurrency(value);
                                 }
+                            },
+                            grid: {
+                                color: '#f3f4f6'
+                            }
+                        },
+                        y: {
+                            stacked: false,
+                            grid: {
+                                display: false
                             }
                         }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.x);
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        bar: {
+                            borderWidth: 0
+                        }
                     }
-                }
+                },
+                plugins: [{
+                    id: 'valueLabels',
+                    afterDatasetsDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        const datasets = chart.data.datasets;
+                        
+                        datasets.forEach((dataset, datasetIndex) => {
+                            const meta = chart.getDatasetMeta(datasetIndex);
+                            
+                            meta.data.forEach((bar, index) => {
+                                const value = dataset.data[index];
+                                
+                                if (value > 0) {
+                                    ctx.save();
+                                    ctx.fillStyle = '#000';
+                                    ctx.font = 'bold 11px Arial';
+                                    ctx.textAlign = 'left';
+                                    ctx.textBaseline = 'middle';
+                                    
+                                    const x = bar.x + 8; // Position to the right of bar end
+                                    const y = bar.y;
+                                    
+                                    // Add white background for better readability
+                                    const text = formatCurrency(value);
+                                    const textWidth = ctx.measureText(text).width;
+                                    
+                                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                                    ctx.fillRect(x - 3, y - 8, textWidth + 6, 16);
+                                    
+                                    ctx.fillStyle = '#000';
+                                    ctx.fillText(text, x, y);
+                                    ctx.restore();
+                                }
+                            });
+                        });
+                    }
+                }]
             });
         }
 
@@ -398,7 +473,9 @@
         }
 
         // Initialize dashboard when page loads
-        loadData();
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+        });
     </script>
 </body>
 </html>
