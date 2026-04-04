@@ -1,0 +1,14 @@
+{
+  "name": "damien-revenue-reports",
+  "version": "1.0.0",
+  "description": "Automated Sunday revenue reports dashboard for Damien",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "build": "echo 'Static site - no build required'",
+    "start": "python3 -m http.server 3000"
+  },
+  "keywords": ["revenue", "reports", "dashboard", "brightwild"],
+  "author": "OB1",
+  "license": "MIT"
+}

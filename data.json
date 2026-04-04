@@ -1,0 +1,40 @@
+{
+  "lastUpdated": "2026-04-04T18:03:00.000Z",
+  "unitGroups": {
+    "KHE_ORIGINAL_10": {
+      "name": "KHE Original 10",
+      "months": ["Jan", "Feb", "Mar"],
+      "cy": [365708, 424705, 472814],
+      "stly": [284938, 258895, 421295],
+      "lyFinal": [284938, 258895, 421295]
+    },
+    "GEMMA_4_UNITS": {
+      "name": "Gemma (4 Units)",
+      "months": ["Jan", "Feb", "Mar"],
+      "cy": [81528, 108047, 219379],
+      "stly": [48236, 121149, 221999],
+      "lyFinal": [48236, 121149, 221999]
+    },
+    "HC_50_UNITS": {
+      "name": "Hotel Cabana HC 50",
+      "months": ["Jan", "Feb", "Mar"],
+      "cy": [12477, 41251, 84818],
+      "stly": [0, 0, 0],
+      "lyFinal": [0, 0, 0]
+    },
+    "720_D_SIMONTON": {
+      "name": "720 D Simonton",
+      "months": ["Jan", "Feb", "Mar"],
+      "cy": [51445, 45977, 47899],
+      "stly": [49642, 45440, 52048],
+      "lyFinal": [49642, 45440, 52048]
+    },
+    "KAMP_430_FLEMING": {
+      "name": "Kamp (430 Fleming)",
+      "months": ["Jan", "Feb", "Mar"],
+      "cy": [28536, 31647, 26890],
+      "stly": [26086, 20769, 27674],
+      "lyFinal": [26086, 20769, 27674]
+    }
+  }
+}

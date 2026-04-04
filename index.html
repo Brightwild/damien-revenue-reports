@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Damien's Sunday Revenue Reports</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            text-align: center;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+            transition: transform 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-title {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+        .neutral { color: #95a5a6; }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+        }
+        
+        .last-updated {
+            text-align: center;
+            margin-top: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .footer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Damien's Sunday Reports</h1>
+        <p>Revenue Analysis Dashboard • Updated Every Sunday at 8:00 AM ET</p>
+    </div>
+
+    <div class="container">
+        <div class="stats-overview" id="statsOverview">
+            <!-- Stats cards will be populated by JavaScript -->
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">KHE Original 10 Units</div>
+                <div class="chart-container">
+                    <canvas id="kheChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">Gemma (4 Units)</div>
+                <div class="chart-container">
+                    <canvas id="gemmaChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">Hotel Cabana HC 50 Units</div>
+                <div class="chart-container">
+                    <canvas id="hcChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">720 D Simonton</div>
+                <div class="chart-container">
+                    <canvas id="simontonChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">Kamp (430 Fleming)</div>
+                <div class="chart-container">
+                    <canvas id="kampChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="last-updated" id="lastUpdated">
+            Last updated: Loading...
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🤖 Automated by OB1 • Generated from BigQuery unit_calendar data • 🔥 The Holocron</p>
+    </div>
+
+    <script>
+        // Data will be loaded from data.json
+        let revenueData = {};
+
+        // Load data and initialize dashboard
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                revenueData = await response.json();
+                initializeDashboard();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                // Fallback demo data
+                revenueData = {
+                    lastUpdated: new Date().toISOString(),
+                    unitGroups: {
+                        'KHE_ORIGINAL_10': {
+                            name: 'KHE Original 10',
+                            months: ['Jan', 'Feb', 'Mar'],
+                            cy: [365708, 424705, 472814],
+                            stly: [284938, 258895, 421295],
+                            lyFinal: [284938, 258895, 421295]
+                        },
+                        'GEMMA_4_UNITS': {
+                            name: 'Gemma (4 Units)',
+                            months: ['Jan', 'Feb', 'Mar'],
+                            cy: [81528, 108047, 219379],
+                            stly: [48236, 121149, 221999],
+                            lyFinal: [48236, 121149, 221999]
+                        },
+                        'HC_50_UNITS': {
+                            name: 'Hotel Cabana HC 50',
+                            months: ['Jan', 'Feb', 'Mar'],
+                            cy: [12477, 41251, 84818],
+                            stly: [0, 0, 0],
+                            lyFinal: [0, 0, 0]
+                        },
+                        '720_D_SIMONTON': {
+                            name: '720 D Simonton',
+                            months: ['Jan', 'Feb', 'Mar'],
+                            cy: [51445, 45977, 47899],
+                            stly: [49642, 45440, 52048],
+                            lyFinal: [49642, 45440, 52048]
+                        },
+                        'KAMP_430_FLEMING': {
+                            name: 'Kamp (430 Fleming)',
+                            months: ['Jan', 'Feb', 'Mar'],
+                            cy: [28536, 31647, 26890],
+                            stly: [26086, 20769, 27674],
+                            lyFinal: [26086, 20769, 27674]
+                        }
+                    }
+                };
+                initializeDashboard();
+            }
+        }
+
+        function initializeDashboard() {
+            updateStatsOverview();
+            createCharts();
+            updateLastUpdated();
+        }
+
+        function updateStatsOverview() {
+            const statsContainer = document.getElementById('statsOverview');
+            
+            // Calculate totals
+            let totalCY = 0, totalSTLY = 0, totalLYFinal = 0;
+            
+            Object.values(revenueData.unitGroups).forEach(group => {
+                totalCY += group.cy.reduce((a, b) => a + b, 0);
+                totalSTLY += group.stly.reduce((a, b) => a + b, 0);
+                totalLYFinal += group.lyFinal.reduce((a, b) => a + b, 0);
+            });
+
+            const cyChange = ((totalCY - totalLYFinal) / totalLYFinal * 100).toFixed(1);
+            const stlyChange = ((totalCY - totalSTLY) / totalSTLY * 100).toFixed(1);
+
+            const stats = [
+                {
+                    title: 'Total CY Revenue',
+                    value: formatCurrency(totalCY),
+                    change: `${cyChange}% vs LY Final`,
+                    changeClass: cyChange >= 0 ? 'positive' : 'negative'
+                },
+                {
+                    title: 'vs STLY Performance',
+                    value: formatCurrency(totalCY - totalSTLY),
+                    change: `${stlyChange}% difference`,
+                    changeClass: stlyChange >= 0 ? 'positive' : 'negative'
+                },
+                {
+                    title: 'Best Performer',
+                    value: 'KHE Original 10',
+                    change: formatCurrency(Math.max(...Object.values(revenueData.unitGroups).map(g => g.cy.reduce((a,b) => a + b, 0)))),
+                    changeClass: 'positive'
+                },
+                {
+                    title: 'Growth Opportunity',
+                    value: 'HC 50 Units',
+                    change: 'New in 2026',
+                    changeClass: 'neutral'
+                }
+            ];
+
+            statsContainer.innerHTML = stats.map(stat => `
+                <div class="stat-card">
+                    <div class="stat-title">${stat.title}</div>
+                    <div class="stat-value">${stat.value}</div>
+                    <div class="stat-change ${stat.changeClass}">${stat.change}</div>
+                </div>
+            `).join('');
+        }
+
+        function createCharts() {
+            const chartConfigs = [
+                { id: 'kheChart', data: revenueData.unitGroups['KHE_ORIGINAL_10'] },
+                { id: 'gemmaChart', data: revenueData.unitGroups['GEMMA_4_UNITS'] },
+                { id: 'hcChart', data: revenueData.unitGroups['HC_50_UNITS'] },
+                { id: 'simontonChart', data: revenueData.unitGroups['720_D_SIMONTON'] },
+                { id: 'kampChart', data: revenueData.unitGroups['KAMP_430_FLEMING'] }
+            ];
+
+            chartConfigs.forEach(config => {
+                createChart(config.id, config.data);
+            });
+        }
+
+        function createChart(canvasId, data) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.months.map(m => `${m} 2026`),
+                    datasets: [
+                        {
+                            label: 'CY 2026',
+                            data: data.cy,
+                            backgroundColor: '#4472C4',
+                            borderColor: '#4472C4',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'STLY 2025',
+                            data: data.stly,
+                            backgroundColor: '#E2692F',
+                            borderColor: '#E2692F',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'LY Final 2025',
+                            data: data.lyFinal,
+                            backgroundColor: '#70AD47',
+                            borderColor: '#70AD47',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function formatCurrency(value) {
+            if (value >= 1000000) {
+                return `$${(value / 1000000).toFixed(1)}M`;
+            } else if (value >= 1000) {
+                return `$${(value / 1000).toFixed(0)}K`;
+            } else {
+                return `$${value.toFixed(0)}`;
+            }
+        }
+
+        function updateLastUpdated() {
+            const lastUpdatedElement = document.getElementById('lastUpdated');
+            const date = new Date(revenueData.lastUpdated || new Date());
+            lastUpdatedElement.textContent = `Last updated: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+        }
+
+        // Initialize dashboard when page loads
+        loadData();
+    </script>
+</body>
+</html>
