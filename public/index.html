@@ -271,13 +271,13 @@
             let totalCY = 0, totalSTLY = 0, totalLYFinal = 0;
             const allMonths = 12; // Full year
             
-            Object.values(revenueData.unitGroups).forEach(group => {
-                for(let i = 0; i < allMonths; i++) {
-                    totalCY += group.cy[i] || 0;
-                    totalSTLY += group.stly[i] || 0;
-                    totalLYFinal += group.lyFinal[i] || 0;
-                }
-            });
+            // Use All Properties data for totals (to avoid double counting)
+            const allPropsData = revenueData.unitGroups['ALL_PROPERTIES'];
+            for(let i = 0; i < allMonths; i++) {
+                totalCY += allPropsData.cy[i] || 0;
+                totalSTLY += allPropsData.stly[i] || 0;
+                totalLYFinal += allPropsData.lyFinal[i] || 0;
+            }
 
             const cyChange = totalLYFinal > 0 ? ((totalCY - totalLYFinal) / totalLYFinal * 100).toFixed(1) : 0;
             const stlyChange = totalSTLY > 0 ? ((totalCY - totalSTLY) / totalSTLY * 100).toFixed(1) : 0;
