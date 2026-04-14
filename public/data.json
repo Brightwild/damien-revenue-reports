@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-14T10:03:32.133830",
+  "lastUpdated": "2026-04-14T10:08:00.241113",
   "unitGroups": {
     "ALL_PROPERTIES": {
       "name": "All Properties Combined",
@@ -60,8 +60,8 @@
         0
       ]
     },
-    "BEACHSIDE_ALL": {
-      "name": "Beachside All Units",
+    "KHE_ORIGINAL_10": {
+      "name": "KHE Original 10 Units",
       "months": [
         "January",
         "February",
@@ -77,10 +77,10 @@
         "December"
       ],
       "cy": [
-        2271789,
-        2500803,
-        2558255,
-        1104541,
+        365707,
+        424705,
+        472813,
+        203650,
         0,
         0,
         0,
@@ -91,10 +91,10 @@
         0
       ],
       "stly": [
-        2160935,
-        2378395,
-        2583228,
-        1011757,
+        271128,
+        267767,
+        410601,
+        146882,
         0,
         0,
         0,
@@ -105,10 +105,10 @@
         0
       ],
       "lyFinal": [
-        2160935,
-        2378395,
-        2583228,
-        1011757,
+        271128,
+        267767,
+        410601,
+        146882,
         0,
         0,
         0,
@@ -119,244 +119,8 @@
         0
       ]
     },
-    "CURRY_MANSION_ALL": {
-      "name": "Curry Mansion All Units",
-      "months": [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ],
-      "cy": [
-        325213,
-        341156,
-        354603,
-        122181,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "stly": [
-        291014,
-        346747,
-        299124,
-        116577,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "lyFinal": [
-        291014,
-        346747,
-        299124,
-        116577,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    "LUNARA_BAY_ALL": {
-      "name": "Lunara Bay All Units",
-      "months": [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ],
-      "cy": [
-        1090848,
-        1190384,
-        1321365,
-        603922,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "stly": [
-        562633,
-        501573,
-        787832,
-        293403,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "lyFinal": [
-        562633,
-        501573,
-        787832,
-        293403,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    "HOTEL_CABANA_ALL": {
-      "name": "Hotel Cabana All Units",
-      "months": [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ],
-      "cy": [
-        12477,
-        41251,
-        84228,
-        35793,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "stly": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "lyFinal": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    "SUNRISE_SUITES_ALL": {
-      "name": "Sunrise Suites All Units",
-      "months": [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ],
-      "cy": [
-        45693,
-        44694,
-        47264,
-        19692,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "stly": [
-        124195,
-        106314,
-        106518,
-        36617,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "lyFinal": [
-        124195,
-        106314,
-        106518,
-        36617,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    "GEMMA_ALL": {
-      "name": "The Gemma All Units",
+    "GEMMA_4_UNITS": {
+      "name": "Gemma (4 Units)",
       "months": [
         "January",
         "February",
@@ -414,8 +178,8 @@
         0
       ]
     },
-    "DUVAL_SQUARE_ALL": {
-      "name": "Duval Square All Units",
+    "HC_50_UNITS": {
+      "name": "Hotel Cabana HC 50 Units",
       "months": [
         "January",
         "February",
@@ -431,10 +195,10 @@
         "December"
       ],
       "cy": [
-        52342,
-        70530,
-        71212,
-        25149,
+        12477,
+        41251,
+        84228,
+        35793,
         0,
         0,
         0,
@@ -445,10 +209,10 @@
         0
       ],
       "stly": [
-        76687,
-        63532,
-        57695,
-        22677,
+        0,
+        0,
+        0,
+        0,
         0,
         0,
         0,
@@ -459,10 +223,10 @@
         0
       ],
       "lyFinal": [
-        76687,
-        63532,
-        57695,
-        22677,
+        0,
+        0,
+        0,
+        0,
         0,
         0,
         0,
@@ -473,8 +237,8 @@
         0
       ]
     },
-    "TROPICAL_SUITES_ALL": {
-      "name": "Tropical Suites All Units",
+    "720_D_SIMONTON": {
+      "name": "720 D Simonton",
       "months": [
         "January",
         "February",
@@ -490,10 +254,10 @@
         "December"
       ],
       "cy": [
-        25780,
-        55727,
-        63295,
-        28702,
+        51445,
+        45977,
+        50370,
+        27056,
         0,
         0,
         0,
@@ -504,10 +268,10 @@
         0
       ],
       "stly": [
-        27494,
-        48763,
-        68952,
-        31416,
+        47632,
+        42817,
+        52047,
+        18227,
         0,
         0,
         0,
@@ -518,10 +282,246 @@
         0
       ],
       "lyFinal": [
-        27494,
-        48763,
-        68952,
-        31416,
+        47632,
+        42817,
+        52047,
+        18227,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "KAMP_430_FLEMING": {
+      "name": "Kamp (430 Fleming)",
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "cy": [
+        28536,
+        31647,
+        26890,
+        11245,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "stly": [
+        25558,
+        20601,
+        26597,
+        7160,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "lyFinal": [
+        25558,
+        20601,
+        26597,
+        7160,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "BEACHSIDE_ALL": {
+      "name": "Beachside All",
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "cy": [
+        2271789,
+        2500803,
+        2558255,
+        1104541,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "stly": [
+        2160935,
+        2378395,
+        2583228,
+        1011757,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "lyFinal": [
+        2160935,
+        2378395,
+        2583228,
+        1011757,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "LUNARA_BAY_ALL": {
+      "name": "Lunara Bay All",
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "cy": [
+        1090848,
+        1190384,
+        1321365,
+        603922,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "stly": [
+        562633,
+        501573,
+        787832,
+        293403,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "lyFinal": [
+        562633,
+        501573,
+        787832,
+        293403,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "CURRY_MANSION_ALL": {
+      "name": "Curry Mansion All",
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "cy": [
+        325213,
+        341156,
+        354603,
+        122181,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "stly": [
+        291014,
+        346747,
+        299124,
+        116577,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "lyFinal": [
+        291014,
+        346747,
+        299124,
+        116577,
         0,
         0,
         0,
