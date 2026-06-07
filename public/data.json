@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T11:58:10.006938+00:00",
+  "lastUpdated": "2026-06-07T12:02:45.652388+00:00",
   "unitGroups": {
     "ALL_PROPERTIES": {
       "name": "All Properties Combined",
@@ -60,8 +60,67 @@
         4876026
       ]
     },
+    "KHE_ORIGINAL_10": {
+      "name": "KHE Original 10 Units",
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "cy": [
+        365708,
+        424705,
+        472814,
+        397135,
+        333553,
+        326196,
+        270848,
+        177106,
+        142370,
+        119831,
+        88158,
+        27725
+      ],
+      "stly": [
+        271128,
+        267768,
+        410601,
+        322692,
+        290514,
+        243406,
+        311269,
+        147443,
+        83504,
+        98151,
+        52377,
+        53256
+      ],
+      "lyFinal": [
+        271128,
+        267768,
+        410601,
+        322692,
+        290514,
+        261961,
+        385783,
+        243449,
+        126962,
+        157228,
+        230029,
+        367128
+      ]
+    },
     "GEMMA_4_UNITS": {
-      "name": "Gemma 4 Units",
+      "name": "Gemma (4 Units)",
       "months": [
         "January",
         "February",
@@ -117,6 +176,65 @@
         66401,
         101512,
         125827
+      ]
+    },
+    "HC_50_UNITS": {
+      "name": "Hotel Cabana HC 50 Units",
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "cy": [
+        12477,
+        41251,
+        84228,
+        67456,
+        50264,
+        20985,
+        17519,
+        7738,
+        944,
+        0,
+        881,
+        0
+      ],
+      "stly": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1438,
+        0,
+        0,
+        0,
+        0
+      ],
+      "lyFinal": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        298
       ]
     },
     "720_D_SIMONTON": {
@@ -179,7 +297,7 @@
       ]
     },
     "KAMP_430_FLEMING": {
-      "name": "Kamp 430 Fleming",
+      "name": "Kamp (430 Fleming)",
       "months": [
         "January",
         "February",
@@ -412,124 +530,6 @@
         190752,
         222665,
         271983
-      ]
-    },
-    "KHE_ORIGINAL_10": {
-      "name": "KHE Original 10",
-      "months": [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ],
-      "cy": [
-        365708,
-        424705,
-        472814,
-        397135,
-        333553,
-        326196,
-        270848,
-        177106,
-        142370,
-        119831,
-        88158,
-        27725
-      ],
-      "stly": [
-        271128,
-        267768,
-        410601,
-        322692,
-        290514,
-        243406,
-        311269,
-        147443,
-        83504,
-        98151,
-        52377,
-        53256
-      ],
-      "lyFinal": [
-        271128,
-        267768,
-        410601,
-        322692,
-        290514,
-        261961,
-        385783,
-        243449,
-        126962,
-        157228,
-        230029,
-        367128
-      ]
-    },
-    "HC_50_UNITS": {
-      "name": "Hotel Cabana HC 50",
-      "months": [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ],
-      "cy": [
-        12477,
-        41251,
-        84228,
-        67456,
-        50264,
-        20985,
-        17519,
-        7738,
-        944,
-        0,
-        881,
-        0
-      ],
-      "stly": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1438,
-        0,
-        0,
-        0,
-        0
-      ],
-      "lyFinal": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        298
       ]
     }
   }
