@@ -22,7 +22,7 @@
         .header {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            padding: 2rem 0;
+            padding: 2rem 0 1.5rem;
             text-align: center;
             color: white;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -39,16 +39,71 @@
             font-size: 1.2rem;
             opacity: 0.9;
         }
+
+        .year-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+        }
+
+        .year-tab {
+            appearance: none;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.16);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 999px;
+            padding: 0.55rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .year-tab.active {
+            background: white;
+            color: #4c1d95;
+            border-color: white;
+        }
+
+        .year-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        .year-tab:focus-visible {
+            outline: 2px solid white;
+            outline-offset: 3px;
+        }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
+
+        .comp-note {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            margin: 0 auto 1.5rem;
+            max-width: 860px;
+            text-align: center;
+            color: #2c3e50;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+        }
+
+        .comp-note[hidden] {
+            display: none;
+        }
         
         .stats-overview {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             gap: 1.5rem;
             margin-bottom: 3rem;
         }
@@ -61,8 +116,9 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transform: translateY(0);
             transition: transform 0.2s ease;
-            min-width: 300px;
-            max-width: 400px;
+            flex: 0 1 420px;
+            min-width: 260px;
+            max-width: 420px;
         }
         
         .stat-card:hover {
@@ -115,6 +171,15 @@
             margin-bottom: 1.5rem;
             text-align: center;
         }
+
+        .chart-note {
+            text-align: center;
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            margin: -0.5rem auto 1.25rem;
+            max-width: 760px;
+        }
         
         .chart-container {
             position: relative;
@@ -136,84 +201,58 @@
             color: rgba(255, 255, 255, 0.8);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .load-error {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            color: #2c3e50;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .container {
+                padding: 1.25rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .chart-title {
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>📊 Damien's Sunday Reports</h1>
-        <p>Complete Portfolio + 5 Unit Groups</p>
+        <p>Complete Portfolio + Unit Groups</p>
         <p>Revenue Analysis Dashboard • Updated Every Sunday at 8:00 AM ET</p>
+        <div class="year-tabs" id="yearTabs" role="tablist" aria-label="Report year"></div>
     </div>
 
     <div class="container">
+        <p class="comp-note" id="compNote" hidden></p>
+
         <div class="stats-overview" id="statsOverview">
-            <!-- Stats cards will be populated by JavaScript -->
-        </div>
-
-        <div class="charts-grid">
-            <div class="chart-card">
-                <div class="chart-title">🏆 ALL PROPERTIES COMBINED - 2026 Revenue Analysis</div>
-                <div class="chart-container">
-                    <canvas id="allPropertiesChart"></canvas>
-                </div>
-            </div>
-            
-            <div class="chart-card">
-                <div class="chart-title">KHE Original 10 Units - 2026 Revenue Analysis</div>
-                <div class="chart-container">
-                    <canvas id="kheChart"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-title">Gemma (4 Units) - 2026 Revenue Analysis</div>
-                <div class="chart-container">
-                    <canvas id="gemmaChart"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-title">Hotel Cabana HC 50 Units - 2026 Revenue Analysis</div>
-                <div class="chart-container">
-                    <canvas id="hcChart"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-title">720 D Simonton - 2026 Revenue Analysis</div>
-                <div class="chart-container">
-                    <canvas id="simontonChart"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-title">Kamp (430 Fleming) - 2026 Revenue Analysis</div>
-                <div class="chart-container">
-                    <canvas id="kampChart"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-title">Beachside All - 2026 Revenue Analysis</div>
-                <div class="chart-container">
-                    <canvas id="beachsideChart"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-title">Lunara Bay All - 2026 Revenue Analysis</div>
-                <div class="chart-container">
-                    <canvas id="lunaraBayChart"></canvas>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-title">Curry Mansion All - 2026 Revenue Analysis</div>
-                <div class="chart-container">
-                    <canvas id="curryMansionChart"></canvas>
-                </div>
+            <div class="stat-card">
+                <div class="stat-title">Loading</div>
+                <div class="stat-value">…</div>
             </div>
         </div>
+
+        <div class="charts-grid" id="chartsGrid"></div>
 
         <div class="last-updated" id="lastUpdated">
             Last updated: Loading...
@@ -225,189 +264,349 @@
     </div>
 
     <script>
-        // Data will be loaded from data.json
-        let revenueData = {};
+        // Generator contract (script lives outside this repo and overwrites data.json daily):
+        // - Render source is data.years[year].unitGroups. Top-level unitGroups is the legacy fallback.
+        // - Emit HOTEL_CABANA_COMPLEX for every year (full Hotel Cabana, every unit). Subset
+        //   groups for individual Hotel Cabana series are ignored even if they keep showing up.
+        // - 2026 currently has no complex group. Its full-complex current-year months are only present
+        //   as the 2027 comparison copy, so the page reconstructs that one series and omits prior-year comps.
+        // - When a comparison is a copy of another year's actuals, set
+        //   years[year].comparison = { kind: "placeholder", sourceYear: "2026", label: "2026 actual (placeholder comp)" }
+        //   and years[year].cyBasis = "otb". Set comparison.kind to "actual" once STLY / LY Final are real
+        //   so the page does not infer a placeholder from matching numbers.
 
-        // Load data and initialize dashboard
-        async function loadData() {
-            try {
-                const response = await fetch('data.json');
-                revenueData = await response.json();
-                initializeDashboard();
-            } catch (error) {
-                console.error('Error loading data:', error);
-                // Use the real data as fallback
-                revenueData = {
-                    lastUpdated: new Date().toISOString(),
-                    unitGroups: {
-                        'KHE_ORIGINAL_10': {
-                            name: 'KHE Original 10',
-                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                            cy: [365708, 424705, 472814, 64733, 0, 0, 0, 0, 0, 0, 0, 0],
-                            stly: [284938, 258895, 421295, 66218, 0, 0, 0, 0, 0, 0, 0, 0],
-                            lyFinal: [284938, 258895, 421295, 321808, 293690, 259219, 377162, 254721, 126405, 159753, 229843, 336272]
-                        },
-                        'GEMMA_4_UNITS': {
-                            name: 'Gemma (4 Units)',
-                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                            cy: [81528, 108047, 219379, 34504, 0, 0, 0, 0, 0, 0, 0, 0],
-                            stly: [48236, 121149, 221999, 19207, 0, 0, 0, 0, 0, 0, 0, 0],
-                            lyFinal: [48236, 121149, 221999, 149100, 134860, 158625, 187435, 91439, 43075, 64958, 101188, 119733]
-                        },
-                        'HC_50_UNITS': {
-                            name: 'Hotel Cabana HC 50',
-                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                            cy: [12477, 41251, 84818, 10530, 0, 0, 0, 0, 0, 0, 0, 0],
-                            stly: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            lyFinal: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        },
-                        '720_D_SIMONTON': {
-                            name: '720 D Simonton',
-                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                            cy: [51445, 45977, 47899, 9516, 0, 0, 0, 0, 0, 0, 0, 0],
-                            stly: [49642, 45440, 52048, 6540, 0, 0, 0, 0, 0, 0, 0, 0],
-                            lyFinal: [49642, 45440, 52048, 41552, 33216, 34595, 26944, 26883, 19970, 33989, 33563, 38461]
-                        },
-                        'KAMP_430_FLEMING': {
-                            name: 'Kamp (430 Fleming)',
-                            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                            cy: [28536, 31647, 26890, 3183, 0, 0, 0, 0, 0, 0, 0, 0],
-                            stly: [26086, 20769, 27674, 3300, 0, 0, 0, 0, 0, 0, 0, 0],
-                            lyFinal: [26086, 20769, 27674, 16347, 12631, 11523, 13306, 8708, 5906, 10503, 17008, 17749]
-                        }
+        let revenueData = null;
+        let yearMap = {};
+        let activeCharts = [];
+
+        const COLORS = {
+            cy: '#1e3a8a',
+            stly: '#3b82f6',
+            lyFinal: '#93c5fd'
+        };
+
+        const COMPLEX_KEYS = ['HOTEL_CABANA_COMPLEX', 'HOTEL_CABANA', 'HOTEL_CABANA_ALL', 'HC_COMPLEX'];
+
+        const CHART_ORDER = [
+            'ALL_PROPERTIES',
+            'KHE_ORIGINAL_10',
+            'GEMMA_4_UNITS',
+            'HOTEL_CABANA_COMPLEX',
+            '720_D_SIMONTON',
+            'KAMP_430_FLEMING',
+            'BEACHSIDE_ALL',
+            'LUNARA_BAY_ALL',
+            'CURRY_MANSION_ALL'
+        ];
+
+        const DISPLAY_NAMES = {
+            ALL_PROPERTIES: 'ALL PROPERTIES COMBINED',
+            KHE_ORIGINAL_10: 'KHE Original 10 Units',
+            GEMMA_4_UNITS: 'Gemma (4 Units)',
+            HOTEL_CABANA_COMPLEX: 'Hotel Cabana',
+            HOTEL_CABANA: 'Hotel Cabana',
+            HOTEL_CABANA_ALL: 'Hotel Cabana',
+            HC_COMPLEX: 'Hotel Cabana',
+            '720_D_SIMONTON': '720 D Simonton',
+            KAMP_430_FLEMING: 'Kamp (430 Fleming)',
+            BEACHSIDE_ALL: 'Beachside All',
+            LUNARA_BAY_ALL: 'Lunara Bay All',
+            CURRY_MANSION_ALL: 'Curry Mansion All'
+        };
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, character => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[character]));
+        }
+
+        function sum(values) {
+            if (!Array.isArray(values)) return 0;
+            return values.reduce((total, value) => total + (Number(value) || 0), 0);
+        }
+
+        function numArray(values) {
+            if (!Array.isArray(values)) return [];
+            return values.map(value => Number(value) || 0);
+        }
+
+        function arraysEqual(left, right) {
+            if (!Array.isArray(left) || !Array.isArray(right) || left.length !== right.length || left.length === 0) {
+                return false;
+            }
+            for (let index = 0; index < left.length; index += 1) {
+                if (Number(left[index]) !== Number(right[index])) return false;
+            }
+            return true;
+        }
+
+        function compareYears(left, right) {
+            const leftNumber = Number(left);
+            const rightNumber = Number(right);
+            if (Number.isFinite(leftNumber) && Number.isFinite(rightNumber)) return leftNumber - rightNumber;
+            return String(left).localeCompare(String(right));
+        }
+
+        function groupsOf(entry) {
+            if (!entry || typeof entry !== 'object') return {};
+            if (entry.unitGroups && typeof entry.unitGroups === 'object') return entry.unitGroups;
+            const values = Object.values(entry);
+            if (entry.ALL_PROPERTIES || values.some(value => value && Array.isArray(value.cy))) return entry;
+            return {};
+        }
+
+        function isComplexGroup(key, group) {
+            if (COMPLEX_KEYS.includes(key)) return true;
+            const name = String((group && group.name) || '');
+            if (!/hotel\s*cabana/i.test(name)) return false;
+            if (/HC\s*50/i.test(name) || /\bHC\s*\d+/.test(name)) return false;
+            return true;
+        }
+
+        function isHiddenGroup(key, group) {
+            if (isComplexGroup(key, group)) return false;
+            const name = String((group && group.name) || '');
+            if (/HC[_-]?50/i.test(key) || /HC[_-]?\d+_UNITS/i.test(key) || /^HC[_-]?\d+$/i.test(key)) return true;
+            if (/HC\s*50/i.test(name) || /^HC\s*\d+/.test(name) || /\bHC\s*\d+\b/.test(name)) return true;
+            return false;
+        }
+
+        function findComplexKey(groups) {
+            for (const key of COMPLEX_KEYS) {
+                if (groups[key] && isComplexGroup(key, groups[key])) return key;
+            }
+            for (const key of Object.keys(groups)) {
+                if (isComplexGroup(key, groups[key]) && !isHiddenGroup(key, groups[key])) return key;
+            }
+            return null;
+        }
+
+        function explicitComparison(entry) {
+            if (!entry || typeof entry !== 'object') return null;
+            const comparison = entry.comparison || entry.comp;
+            if (!comparison || typeof comparison !== 'object') return null;
+            const kind = String(comparison.kind || comparison.type || '').toLowerCase();
+            if (kind === 'actual' || kind === 'real' || comparison.placeholder === false) {
+                return { forceActual: true };
+            }
+            if (kind === 'placeholder' || comparison.placeholder === true) {
+                const sourceYear = comparison.sourceYear || comparison.source || comparison.baseYear;
+                const label = comparison.label || (sourceYear ? `${sourceYear} actual (placeholder comp)` : 'Placeholder comp');
+                return {
+                    sourceYear: sourceYear != null ? String(sourceYear) : null,
+                    label: String(label)
+                };
+            }
+            return null;
+        }
+
+        function detectPlaceholder(year, map) {
+            const entry = map[year] || {};
+            const explicit = explicitComparison(entry);
+            if (explicit) return explicit.forceActual ? null : explicit;
+
+            const groups = groupsOf(entry);
+            const comparable = Object.keys(groups).filter(key => {
+                const group = groups[key];
+                return group && Array.isArray(group.stly) && Array.isArray(group.lyFinal) && group.stly.length && group.lyFinal.length;
+            });
+            if (!comparable.length || !comparable.every(key => arraysEqual(groups[key].stly, groups[key].lyFinal))) return null;
+
+            for (const sourceYear of Object.keys(map).sort(compareYears)) {
+                if (sourceYear === year) continue;
+                const sourceGroups = groupsOf(map[sourceYear]);
+                const shared = comparable.filter(key => sourceGroups[key] && Array.isArray(sourceGroups[key].cy) && sourceGroups[key].cy.length);
+                if (shared.length < 3) continue;
+                const matched = shared.filter(key => arraysEqual(groups[key].stly, sourceGroups[key].cy));
+                const allPropertiesMatch = !groups.ALL_PROPERTIES || !sourceGroups.ALL_PROPERTIES
+                    || arraysEqual(groups.ALL_PROPERTIES.stly, sourceGroups.ALL_PROPERTIES.cy);
+                if (allPropertiesMatch && matched.length === shared.length) {
+                    return {
+                        sourceYear,
+                        label: `${sourceYear} actual (placeholder comp)`
+                    };
+                }
+            }
+            return null;
+        }
+
+        function isOnTheBooks(year, entry, placeholder) {
+            const basis = entry && (entry.cyBasis || entry.basis);
+            if (basis === 'otb' || basis === 'on-the-books') return true;
+            if (basis === 'actual' || basis === 'cy') return false;
+            if (placeholder) return true;
+            const yearNumber = Number(year);
+            const defaultYear = revenueData && revenueData.defaultYear != null ? Number(revenueData.defaultYear) : NaN;
+            if (Number.isFinite(yearNumber) && Number.isFinite(defaultYear) && yearNumber > defaultYear) return true;
+            if (Number.isFinite(yearNumber) && yearNumber > new Date().getFullYear()) return true;
+            return false;
+        }
+
+        function deriveComplex(year, map) {
+            for (const otherYear of Object.keys(map)) {
+                if (otherYear === year) continue;
+                const otherGroups = groupsOf(map[otherYear]);
+                const complexKey = findComplexKey(otherGroups);
+                if (!complexKey) continue;
+                const placeholder = detectPlaceholder(otherYear, map);
+                if (!placeholder || String(placeholder.sourceYear) !== String(year)) continue;
+                const source = otherGroups[complexKey];
+                if (!arraysEqual(source.stly, source.lyFinal)) continue;
+                return {
+                    key: complexKey,
+                    derived: true,
+                    note: `Full Hotel Cabana (all units). The ${year} data has no Hotel Cabana complex group, so these bars use the ${year} actuals stored on the ${otherYear} comparison. Prior-year comps are not in the data and are omitted.`,
+                    group: {
+                        name: source.name || 'Hotel Cabana',
+                        months: source.months,
+                        cy: source.stly.slice(),
+                        stly: [],
+                        lyFinal: [],
+                        compsUnavailable: true
                     }
                 };
-                initializeDashboard();
             }
+            return null;
         }
 
-        function initializeDashboard() {
-            updateStatsOverview();
-            createCharts();
-            updateLastUpdated();
-        }
+        function buildCharts(year, map) {
+            const source = groupsOf(map[year]);
+            const groups = {};
+            Object.keys(source).forEach(key => {
+                if (!isHiddenGroup(key, source[key])) groups[key] = source[key];
+            });
 
-        function updateStatsOverview() {
-            const statsContainer = document.getElementById('statsOverview');
-            
-            // Calculate totals for full year
-            let totalCY = 0, totalSTLY = 0, totalLYFinal = 0;
-            const allMonths = 12; // Full year
-            
-            // Use All Properties data for totals (to avoid double counting)
-            const allPropsData = revenueData.unitGroups['ALL_PROPERTIES'];
-            for(let i = 0; i < allMonths; i++) {
-                totalCY += allPropsData.cy[i] || 0;
-                totalSTLY += allPropsData.stly[i] || 0;
-                totalLYFinal += allPropsData.lyFinal[i] || 0;
-            }
-
-            const cyChange = totalLYFinal > 0 ? ((totalCY - totalLYFinal) / totalLYFinal * 100).toFixed(1) : 0;
-            const stlyChange = totalSTLY > 0 ? ((totalCY - totalSTLY) / totalSTLY * 100).toFixed(1) : 0;
-
-            const stats = [
-                {
-                    title: 'Total CY Revenue (2026)',
-                    value: formatCurrency(totalCY),
-                    change: `${stlyChange}% vs STLY`,
-                    changeClass: stlyChange >= 0 ? 'positive' : 'negative'
+            let complexKey = findComplexKey(groups);
+            let derivedNote = '';
+            let derived = false;
+            if (!complexKey) {
+                const reconstructed = deriveComplex(year, map);
+                if (reconstructed) {
+                    complexKey = reconstructed.key;
+                    groups[complexKey] = reconstructed.group;
+                    derived = true;
+                    derivedNote = reconstructed.note;
                 }
-            ];
+            }
 
-            statsContainer.innerHTML = stats.map(stat => `
-                <div class="stat-card">
-                    <div class="stat-title">${stat.title}</div>
-                    <div class="stat-value">${stat.value}</div>
-                    <div class="stat-change ${stat.changeClass}">${stat.change}</div>
-                </div>
-            `).join('');
-        }
+            const ordered = [];
+            CHART_ORDER.forEach(key => {
+                if (key === 'HOTEL_CABANA_COMPLEX') {
+                    if (complexKey && groups[complexKey]) ordered.push(complexKey);
+                    else ordered.push('__MISSING_HOTEL__');
+                } else if (groups[key]) {
+                    ordered.push(key);
+                }
+            });
+            Object.keys(groups).forEach(key => {
+                if (complexKey && key !== complexKey && isComplexGroup(key, groups[key])) return;
+                if (!ordered.includes(key) && key !== complexKey) ordered.push(key);
+            });
 
-        function createCharts() {
-            const chartConfigs = [
-                { id: 'allPropertiesChart', data: revenueData.unitGroups['ALL_PROPERTIES'] },
-                { id: 'kheChart', data: revenueData.unitGroups['KHE_ORIGINAL_10'] },
-                { id: 'gemmaChart', data: revenueData.unitGroups['GEMMA_4_UNITS'] },
-                { id: 'hcChart', data: revenueData.unitGroups['HC_50_UNITS'] },
-                { id: 'simontonChart', data: revenueData.unitGroups['720_D_SIMONTON'] },
-                { id: 'kampChart', data: revenueData.unitGroups['KAMP_430_FLEMING'] },
-                { id: 'beachsideChart', data: revenueData.unitGroups['BEACHSIDE_ALL'] },
-                { id: 'lunaraBayChart', data: revenueData.unitGroups['LUNARA_BAY_ALL'] },
-                { id: 'curryMansionChart', data: revenueData.unitGroups['CURRY_MANSION_ALL'] }
-            ];
-
-            chartConfigs.forEach(config => {
-                createChart(config.id, config.data);
+            return ordered.map(key => {
+                if (key === '__MISSING_HOTEL__') {
+                    return { key: 'HOTEL_CABANA_COMPLEX', missing: true, year };
+                }
+                return {
+                    key,
+                    group: groups[key],
+                    derived: key === complexKey && derived,
+                    note: key === complexKey && derived ? derivedNote : '',
+                    year
+                };
             });
         }
 
-        function createChart(canvasId, data) {
-            const ctx = document.getElementById(canvasId);
-            if (!ctx) return;
+        function chartTitle(model) {
+            const name = DISPLAY_NAMES[model.key] || (model.group && model.group.name) || 'Hotel Cabana';
+            const prefix = model.key === 'ALL_PROPERTIES' ? '🏆 ' : '';
+            return `${prefix}${name} - ${model.year} Revenue Analysis`;
+        }
 
-            const chartCtx = ctx.getContext('2d');
-            
-            // Colors matching the screenshot: Dark navy, medium blue, light blue
-            const colors = {
-                cy: '#1e3a8a',      // Dark navy (2026 Rev)
-                stly: '#3b82f6',    // Medium blue (STLY) 
-                lyFinal: '#93c5fd'  // Light blue (LY Final)
-            };
+        function missingHotelNote(year) {
+            return `Hotel Cabana (full complex) is not in the ${year} data, and it cannot be built from the groups in this file. Partial Hotel Cabana groups are hidden. The data generator needs to emit a full-complex group for ${year}.`;
+        }
 
-            const chart = new Chart(chartCtx, {
+        function datasetsFor(group, mode) {
+            const current = numArray(group.cy);
+            const stly = numArray(group.stly);
+            const lyFinal = numArray(group.lyFinal);
+            if (group.compsUnavailable) {
+                return [{ label: mode.cyLabel, data: current, color: COLORS.cy }];
+            }
+            if (mode.placeholder) {
+                if (arraysEqual(stly, lyFinal)) {
+                    return [
+                        { label: mode.cyLabel, data: current, color: COLORS.cy },
+                        { label: mode.placeholder.label, data: stly, color: COLORS.stly }
+                    ];
+                }
+                return [
+                    { label: mode.cyLabel, data: current, color: COLORS.cy },
+                    { label: `${mode.placeholder.label} (first series)`, data: stly, color: COLORS.stly },
+                    { label: `${mode.placeholder.label} (second series)`, data: lyFinal, color: COLORS.lyFinal }
+                ];
+            }
+            return [
+                { label: mode.cyLabel, data: current, color: COLORS.cy },
+                { label: 'STLY', data: stly, color: COLORS.stly },
+                { label: 'LY Final', data: lyFinal, color: COLORS.lyFinal }
+            ];
+        }
+
+        function formatCurrency(value) {
+            const amount = Number(value) || 0;
+            if (Math.abs(amount) >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
+            if (Math.abs(amount) >= 1000) return `$${(amount / 1000).toFixed(0)}K`;
+            return `$${amount.toFixed(0)}`;
+        }
+
+        function destroyCharts() {
+            activeCharts.forEach(chart => {
+                try { chart.destroy(); } catch (error) { /* canvas already gone */ }
+            });
+            activeCharts = [];
+        }
+
+        function createChart(canvas, group, mode) {
+            if (!canvas || typeof Chart === 'undefined') return;
+            const datasets = datasetsFor(group, mode);
+            const chart = new Chart(canvas.getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: data.months,
-                    datasets: [
-                        {
-                            label: '2026 Rev',
-                            data: data.cy,
-                            backgroundColor: colors.cy,
-                            borderColor: colors.cy,
-                            borderWidth: 0
-                        },
-                        {
-                            label: 'STLY',
-                            data: data.stly,
-                            backgroundColor: colors.stly,
-                            borderColor: colors.stly,
-                            borderWidth: 0
-                        },
-                        {
-                            label: 'LY Final',
-                            data: data.lyFinal,
-                            backgroundColor: colors.lyFinal,
-                            borderColor: colors.lyFinal,
-                            borderWidth: 0
-                        }
-                    ]
+                    labels: group.months || ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    datasets: datasets.map(dataset => ({
+                        label: dataset.label,
+                        data: dataset.data,
+                        backgroundColor: dataset.color,
+                        borderColor: dataset.color,
+                        borderWidth: 0
+                    }))
                 },
                 options: {
-                    indexAxis: 'y', // Horizontal bars
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     interaction: {
                         mode: 'index',
-                        intersect: false,
+                        intersect: false
                     },
                     scales: {
                         x: {
                             beginAtZero: true,
                             stacked: false,
                             ticks: {
-                                callback: function(value) {
-                                    return formatCurrency(value);
-                                }
+                                callback: value => formatCurrency(value)
                             },
-                            grid: {
-                                color: '#f3f4f6'
-                            }
+                            grid: { color: '#f3f4f6' }
                         },
                         y: {
                             stacked: false,
-                            grid: {
-                                display: false
-                            }
+                            grid: { display: false }
                         }
                     },
                     plugins: {
@@ -420,78 +619,234 @@
                         },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.x);
-                                }
+                                label: context => `${context.dataset.label}: ${formatCurrency(context.parsed.x)}`
                             }
                         }
                     },
                     elements: {
-                        bar: {
-                            borderWidth: 0
-                        }
+                        bar: { borderWidth: 0 }
                     }
                 },
                 plugins: [{
                     id: 'valueLabels',
-                    afterDatasetsDraw: function(chart) {
-                        const ctx = chart.ctx;
-                        const datasets = chart.data.datasets;
-                        
-                        datasets.forEach((dataset, datasetIndex) => {
-                            const meta = chart.getDatasetMeta(datasetIndex);
-                            
+                    afterDatasetsDraw(chartInstance) {
+                        const ctx = chartInstance.ctx;
+                        chartInstance.data.datasets.forEach((dataset, datasetIndex) => {
+                            const meta = chartInstance.getDatasetMeta(datasetIndex);
                             meta.data.forEach((bar, index) => {
-                                const value = dataset.data[index];
-                                
-                                if (value > 0) {
-                                    ctx.save();
-                                    ctx.fillStyle = '#000';
-                                    ctx.font = 'bold 11px Arial';
-                                    ctx.textAlign = 'left';
-                                    ctx.textBaseline = 'middle';
-                                    
-                                    const x = bar.x + 8; // Position to the right of bar end
-                                    const y = bar.y;
-                                    
-                                    // Add white background for better readability
-                                    const text = formatCurrency(value);
-                                    const textWidth = ctx.measureText(text).width;
-                                    
-                                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                                    ctx.fillRect(x - 3, y - 8, textWidth + 6, 16);
-                                    
-                                    ctx.fillStyle = '#000';
-                                    ctx.fillText(text, x, y);
-                                    ctx.restore();
-                                }
+                                const value = Number(dataset.data[index]) || 0;
+                                if (value <= 0) return;
+                                ctx.save();
+                                ctx.font = 'bold 11px Arial';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                const text = formatCurrency(value);
+                                const textWidth = ctx.measureText(text).width;
+                                const x = bar.x + 8;
+                                const y = bar.y;
+                                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                                ctx.fillRect(x - 3, y - 8, textWidth + 6, 16);
+                                ctx.fillStyle = '#000';
+                                ctx.fillText(text, x, y);
+                                ctx.restore();
                             });
                         });
                     }
                 }]
             });
+            activeCharts.push(chart);
         }
 
-        function formatCurrency(value) {
-            if (value >= 1000000) {
-                return `$${(value / 1000000).toFixed(1)}M`;
-            } else if (value >= 1000) {
-                return `$${(value / 1000).toFixed(0)}K`;
-            } else {
-                return `$${value.toFixed(0)}`;
+        function renderStats(year, entry, placeholder) {
+            const container = document.getElementById('statsOverview');
+            const allProperties = groupsOf(entry).ALL_PROPERTIES;
+            if (!allProperties) {
+                container.innerHTML = '<div class="stat-card"><div class="stat-title">Portfolio total</div><div class="stat-value">—</div><div class="stat-change neutral">All-properties total is not in this file.</div></div>';
+                return;
             }
+
+            const totalCurrent = sum(allProperties.cy);
+            const totalComparison = sum(allProperties.stly);
+            const cards = [];
+
+            if (placeholder) {
+                cards.push({
+                    title: `Total OTB Revenue (${year})`,
+                    value: formatCurrency(totalCurrent),
+                    change: 'On the books. Pace versus last year is not shown.',
+                    changeClass: 'neutral'
+                });
+                const sameComparison = arraysEqual(allProperties.stly, allProperties.lyFinal);
+                cards.push({
+                    title: placeholder.label,
+                    value: sameComparison ? formatCurrency(totalComparison) : '—',
+                    change: sameComparison
+                        ? `Full-year ${placeholder.sourceYear || 'prior-year'} revenue used as the comparison. Not a same-time pace.`
+                        : 'The comparison series do not match, so no pace percent is shown.',
+                    changeClass: 'neutral'
+                });
+            } else {
+                const onTheBooks = isOnTheBooks(year, entry, placeholder);
+                let change = 'No STLY comparison';
+                let changeClass = 'neutral';
+                if (totalComparison > 0) {
+                    const percent = ((totalCurrent - totalComparison) / totalComparison * 100).toFixed(1);
+                    change = `${percent}% vs STLY`;
+                    changeClass = Number(percent) >= 0 ? 'positive' : 'negative';
+                }
+                cards.push({
+                    title: onTheBooks ? `Total OTB Revenue (${year})` : `Total CY Revenue (${year})`,
+                    value: formatCurrency(totalCurrent),
+                    change,
+                    changeClass
+                });
+            }
+
+            container.innerHTML = cards.map(card => `
+                <div class="stat-card">
+                    <div class="stat-title">${escapeHtml(card.title)}</div>
+                    <div class="stat-value">${escapeHtml(card.value)}</div>
+                    <div class="stat-change ${card.changeClass}">${escapeHtml(card.change)}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderCharts(year, map, mode) {
+            const grid = document.getElementById('chartsGrid');
+            destroyCharts();
+            const models = buildCharts(year, map);
+            grid.innerHTML = models.map(model => {
+                const title = escapeHtml(chartTitle(model));
+                if (model.missing) {
+                    return `
+                        <div class="chart-card" data-group="HOTEL_CABANA_COMPLEX" data-missing="true">
+                            <div class="chart-title">${title}</div>
+                            <p class="chart-note">${escapeHtml(missingHotelNote(year))}</p>
+                        </div>
+                    `;
+                }
+                const note = model.note ? `<p class="chart-note">${escapeHtml(model.note)}</p>` : '';
+                const canvasId = `chart-${String(model.key).replace(/[^A-Za-z0-9_-]/g, '_')}`;
+                return `
+                    <div class="chart-card" data-group="${escapeHtml(model.key)}" data-derived="${model.derived ? 'true' : 'false'}">
+                        <div class="chart-title">${title}</div>
+                        ${note}
+                        <div class="chart-container">
+                            <canvas id="${canvasId}"></canvas>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            models.forEach(model => {
+                if (model.missing) return;
+                const canvasId = `chart-${String(model.key).replace(/[^A-Za-z0-9_-]/g, '_')}`;
+                createChart(document.getElementById(canvasId), model.group, mode);
+            });
+        }
+
+        function renderYear(year) {
+            if (!yearMap[year]) return;
+            const entry = yearMap[year];
+            const placeholder = detectPlaceholder(year, yearMap);
+            const mode = {
+                placeholder,
+                cyLabel: isOnTheBooks(year, entry, placeholder) ? `${year} OTB` : `${year} Rev`
+            };
+            document.body.dataset.year = year;
+
+            const tabs = document.getElementById('yearTabs');
+            tabs.innerHTML = Object.keys(yearMap).sort(compareYears).map(candidate => `
+                <button type="button" class="year-tab${candidate === year ? ' active' : ''}" role="tab" aria-selected="${candidate === year}" data-year="${escapeHtml(candidate)}">${escapeHtml(candidate)}</button>
+            `).join('');
+
+            const note = document.getElementById('compNote');
+            if (placeholder) {
+                note.hidden = false;
+                note.textContent = `${year} revenue is on the books (OTB). The comparison is ${placeholder.label}, not same-time last year. A year-over-year pace percent is not shown.`;
+            } else {
+                note.hidden = true;
+                note.textContent = '';
+            }
+
+            renderStats(year, entry, placeholder);
+            renderCharts(year, yearMap, mode);
+        }
+
+        function selectedYearFromLocation() {
+            const hash = decodeURIComponent((location.hash || '').replace(/^#/, ''));
+            if (yearMap[hash]) return hash;
+            const preferred = revenueData && revenueData.defaultYear != null ? String(revenueData.defaultYear) : '';
+            if (yearMap[preferred]) return preferred;
+            return Object.keys(yearMap).sort(compareYears)[0];
+        }
+
+        function buildYearMap(data) {
+            if (data.years && typeof data.years === 'object' && Object.keys(data.years).length) {
+                const map = {};
+                Object.keys(data.years).forEach(year => {
+                    map[String(year)] = data.years[year];
+                });
+                return map;
+            }
+            const year = data.defaultYear != null ? String(data.defaultYear) : 'Current';
+            return { [year]: { unitGroups: data.unitGroups || {} } };
         }
 
         function updateLastUpdated() {
-            const lastUpdatedElement = document.getElementById('lastUpdated');
-            const date = new Date(revenueData.lastUpdated || new Date());
-            lastUpdatedElement.textContent = `Last updated: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+            const element = document.getElementById('lastUpdated');
+            const date = new Date(revenueData.lastUpdated || Date.now());
+            element.textContent = Number.isNaN(date.getTime())
+                ? 'Last updated: unknown'
+                : `Last updated: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
         }
 
-        // Initialize dashboard when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
+        function showLoadError() {
+            document.getElementById('statsOverview').innerHTML = '<div class="load-error">Revenue data could not be loaded. Refresh the page once data.json is available.</div>';
+            document.getElementById('lastUpdated').textContent = 'Last updated: unavailable';
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) throw new Error(`data.json returned ${response.status}`);
+                revenueData = await response.json();
+                yearMap = buildYearMap(revenueData);
+                updateLastUpdated();
+                renderYear(selectedYearFromLocation());
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showLoadError();
+            }
+        }
+
+        document.getElementById('yearTabs').addEventListener('click', event => {
+            const button = event.target.closest('.year-tab');
+            if (!button) return;
+            const year = button.getAttribute('data-year');
+            if (!yearMap[year]) return;
+            if (location.hash === `#${year}`) renderYear(year);
+            else location.hash = year;
         });
+
+        document.getElementById('yearTabs').addEventListener('keydown', event => {
+            if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+            const years = Object.keys(yearMap).sort(compareYears);
+            const current = document.body.dataset.year;
+            const index = years.indexOf(current);
+            if (index === -1) return;
+            const direction = event.key === 'ArrowRight' ? 1 : -1;
+            const next = years[(index + direction + years.length) % years.length];
+            location.hash = next;
+        });
+
+        window.addEventListener('hashchange', () => {
+            if (!revenueData) return;
+            renderYear(selectedYearFromLocation());
+        });
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadData);
+        else loadData();
     </script>
 </body>
 </html>
