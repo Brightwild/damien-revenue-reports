@@ -268,12 +268,17 @@
         // - Render source is data.years[year].unitGroups. Top-level unitGroups is the legacy fallback.
         // - Emit HOTEL_CABANA_COMPLEX for every year (full Hotel Cabana, every unit). Subset
         //   groups for individual Hotel Cabana series are ignored even if they keep showing up.
+        // - Keep 720_D_SIMONTON on every year. The Nov 2026 file dropped it from years.2027 when
+        //   Hotel Cabana was added. The page puts the group back from the source year's current-year
+        //   series and leaves that year's on-the-books series blank. Do not invent the missing year.
         // - 2026 currently has no complex group. Its full-complex current-year months are only present
-        //   as the 2027 comparison copy, so the page reconstructs that one series and omits prior-year comps.
+        //   as the 2027 comparison copy, so the page reconstructs that one series and leaves prior-year comps off.
+        // - 2027 stly and lyFinal are copies of 2026 current-year revenue. The page labels that copy
+        //   STLY (2026). Same-time pickup is absent, so the pace percent stays blank.
         // - When a comparison is a copy of another year's actuals, set
-        //   years[year].comparison = { kind: "placeholder", sourceYear: "2026", label: "2026 actual (placeholder comp)" }
+        //   years[year].comparison = { kind: "placeholder", sourceYear: "2026", label: "STLY (2026)" }
         //   and years[year].cyBasis = "otb". Set comparison.kind to "actual" once STLY / LY Final are real
-        //   so the page does not infer a placeholder from matching numbers.
+        //   same-time figures so the page can show a pace percent.
 
         let revenueData = null;
         let yearMap = {};
@@ -446,6 +451,21 @@
             return false;
         }
 
+        function comparisonLabel(placeholder) {
+            if (placeholder && placeholder.sourceYear) return `STLY (${placeholder.sourceYear})`;
+            if (placeholder && placeholder.label) return String(placeholder.label);
+            return 'STLY';
+        }
+
+        function placeholderDisclosure(year, placeholder) {
+            const source = placeholder && placeholder.sourceYear ? String(placeholder.sourceYear) : '';
+            const label = comparisonLabel(placeholder);
+            if (!source) {
+                return `${year} revenue is on the books (OTB). ${label} has no same-time pickup in this file, so the pace percent stays blank.`;
+            }
+            return `${year} revenue is on the books (OTB). ${label} is ${source} current-year revenue copied into both comparison series. Same-time pickup for ${source} is absent from this file, so the pace percent stays blank. LY Final matches that copy, so the chart draws the comparison once.`;
+        }
+
         function deriveComplex(year, map) {
             for (const otherYear of Object.keys(map)) {
                 if (otherYear === year) continue;
@@ -459,7 +479,7 @@
                 return {
                     key: complexKey,
                     derived: true,
-                    note: `Full Hotel Cabana (all units). The ${year} data has no Hotel Cabana complex group, so these bars use the ${year} actuals stored on the ${otherYear} comparison. Prior-year comps are not in the data and are omitted.`,
+                    note: `Full Hotel Cabana (all units). The ${year} data has no Hotel Cabana complex group, so these bars use the ${year} actuals stored on the ${otherYear} comparison. Prior-year comps are absent from this file.`,
                     group: {
                         name: source.name || 'Hotel Cabana',
                         months: source.months,
@@ -471,6 +491,37 @@
                 };
             }
             return null;
+        }
+
+        function reconstruct720(year, map) {
+            if (groupsOf(map[year])['720_D_SIMONTON']) return null;
+            const placeholder = detectPlaceholder(year, map);
+            const sourceYear = placeholder && placeholder.sourceYear ? String(placeholder.sourceYear) : '';
+            if (!sourceYear || !map[sourceYear]) {
+                return {
+                    missing: true,
+                    note: `720 D Simonton is absent from the ${year} groups in this file. No source year is available to supply STLY.`
+                };
+            }
+            const source = groupsOf(map[sourceYear])['720_D_SIMONTON'];
+            if (!source || !Array.isArray(source.cy) || source.cy.length === 0) {
+                return {
+                    missing: true,
+                    note: `720 D Simonton is absent from the ${year} groups in this file, and ${sourceYear} has no current-year series to show as STLY (${sourceYear}).`
+                };
+            }
+            return {
+                missing: false,
+                group: {
+                    name: source.name || '720 D Simonton',
+                    months: source.months,
+                    cy: [],
+                    stly: source.cy.slice(),
+                    lyFinal: source.cy.slice(),
+                    cyUnavailable: true
+                },
+                note: `720 D Simonton is absent from the ${year} groups in this file. STLY (${sourceYear}) is this property's ${sourceYear} current-year revenue. ${year} on-the-books revenue for 720 D Simonton is absent from this file, so that series stays off the chart.`
+            };
         }
 
         function buildCharts(year, map) {
@@ -493,11 +544,28 @@
                 }
             }
 
+            const notes = {};
+            const reconstructedKeys = {};
+            let missing720Note = '';
+            if (!groups['720_D_SIMONTON']) {
+                const restored = reconstruct720(year, map);
+                if (restored && !restored.missing) {
+                    groups['720_D_SIMONTON'] = restored.group;
+                    notes['720_D_SIMONTON'] = restored.note;
+                    reconstructedKeys['720_D_SIMONTON'] = true;
+                } else if (restored && restored.missing) {
+                    missing720Note = restored.note;
+                }
+            }
+
             const ordered = [];
             CHART_ORDER.forEach(key => {
                 if (key === 'HOTEL_CABANA_COMPLEX') {
                     if (complexKey && groups[complexKey]) ordered.push(complexKey);
                     else ordered.push('__MISSING_HOTEL__');
+                } else if (key === '720_D_SIMONTON') {
+                    if (groups[key]) ordered.push(key);
+                    else if (missing720Note) ordered.push('__MISSING_720__');
                 } else if (groups[key]) {
                     ordered.push(key);
                 }
@@ -511,11 +579,15 @@
                 if (key === '__MISSING_HOTEL__') {
                     return { key: 'HOTEL_CABANA_COMPLEX', missing: true, year };
                 }
+                if (key === '__MISSING_720__') {
+                    return { key: '720_D_SIMONTON', missing: true, missingNote: missing720Note, year };
+                }
                 return {
                     key,
                     group: groups[key],
                     derived: key === complexKey && derived,
-                    note: key === complexKey && derived ? derivedNote : '',
+                    reconstructed: !!reconstructedKeys[key],
+                    note: notes[key] || (key === complexKey && derived ? derivedNote : ''),
                     year
                 };
             });
@@ -535,6 +607,16 @@
             const current = numArray(group.cy);
             const stly = numArray(group.stly);
             const lyFinal = numArray(group.lyFinal);
+            const stlyLabel = mode.placeholder ? comparisonLabel(mode.placeholder) : 'STLY';
+            if (group.cyUnavailable) {
+                if (arraysEqual(stly, lyFinal) || lyFinal.length === 0) {
+                    return [{ label: stlyLabel, data: stly, color: COLORS.stly }];
+                }
+                return [
+                    { label: stlyLabel, data: stly, color: COLORS.stly },
+                    { label: 'LY Final', data: lyFinal, color: COLORS.lyFinal }
+                ];
+            }
             if (group.compsUnavailable) {
                 return [{ label: mode.cyLabel, data: current, color: COLORS.cy }];
             }
@@ -542,13 +624,13 @@
                 if (arraysEqual(stly, lyFinal)) {
                     return [
                         { label: mode.cyLabel, data: current, color: COLORS.cy },
-                        { label: mode.placeholder.label, data: stly, color: COLORS.stly }
+                        { label: stlyLabel, data: stly, color: COLORS.stly }
                     ];
                 }
                 return [
                     { label: mode.cyLabel, data: current, color: COLORS.cy },
-                    { label: `${mode.placeholder.label} (first series)`, data: stly, color: COLORS.stly },
-                    { label: `${mode.placeholder.label} (second series)`, data: lyFinal, color: COLORS.lyFinal }
+                    { label: stlyLabel, data: stly, color: COLORS.stly },
+                    { label: 'LY Final', data: lyFinal, color: COLORS.lyFinal }
                 ];
             }
             return [
@@ -673,16 +755,17 @@
                 cards.push({
                     title: `Total OTB Revenue (${year})`,
                     value: formatCurrency(totalCurrent),
-                    change: 'On the books. Pace versus last year is not shown.',
+                    change: 'On the books. The pace percent stays blank because same-time pickup is absent from this file.',
                     changeClass: 'neutral'
                 });
                 const sameComparison = arraysEqual(allProperties.stly, allProperties.lyFinal);
+                const source = placeholder.sourceYear || 'prior-year';
                 cards.push({
-                    title: placeholder.label,
+                    title: comparisonLabel(placeholder),
                     value: sameComparison ? formatCurrency(totalComparison) : '—',
                     change: sameComparison
-                        ? `Full-year ${placeholder.sourceYear || 'prior-year'} revenue used as the comparison. Not a same-time pace.`
-                        : 'The comparison series do not match, so no pace percent is shown.',
+                        ? `Copied ${source} current-year revenue. Same-time pickup for ${source} is absent from this file.`
+                        : 'The comparison series differ, so the pace percent stays blank.',
                     changeClass: 'neutral'
                 });
             } else {
@@ -718,17 +801,21 @@
             grid.innerHTML = models.map(model => {
                 const title = escapeHtml(chartTitle(model));
                 if (model.missing) {
+                    const noteText = model.missingNote || (model.key === '720_D_SIMONTON'
+                        ? `720 D Simonton is absent from the ${year} data.`
+                        : missingHotelNote(year));
                     return `
-                        <div class="chart-card" data-group="HOTEL_CABANA_COMPLEX" data-missing="true">
+                        <div class="chart-card" data-group="${escapeHtml(model.key)}" data-missing="true">
                             <div class="chart-title">${title}</div>
-                            <p class="chart-note">${escapeHtml(missingHotelNote(year))}</p>
+                            <p class="chart-note">${escapeHtml(noteText)}</p>
                         </div>
                     `;
                 }
                 const note = model.note ? `<p class="chart-note">${escapeHtml(model.note)}</p>` : '';
                 const canvasId = `chart-${String(model.key).replace(/[^A-Za-z0-9_-]/g, '_')}`;
+                const cyUnavailable = model.group && model.group.cyUnavailable ? 'true' : 'false';
                 return `
-                    <div class="chart-card" data-group="${escapeHtml(model.key)}" data-derived="${model.derived ? 'true' : 'false'}">
+                    <div class="chart-card" data-group="${escapeHtml(model.key)}" data-derived="${model.derived ? 'true' : 'false'}" data-reconstructed="${model.reconstructed ? 'true' : 'false'}" data-cy-unavailable="${cyUnavailable}">
                         <div class="chart-title">${title}</div>
                         ${note}
                         <div class="chart-container">
@@ -763,7 +850,7 @@
             const note = document.getElementById('compNote');
             if (placeholder) {
                 note.hidden = false;
-                note.textContent = `${year} revenue is on the books (OTB). The comparison is ${placeholder.label}, not same-time last year. A year-over-year pace percent is not shown.`;
+                note.textContent = placeholderDisclosure(year, placeholder);
             } else {
                 note.hidden = true;
                 note.textContent = '';
