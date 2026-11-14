@@ -1,852 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Damien's Sunday Revenue Reports</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem 0 1.5rem;
-            text-align: center;
-            color: white;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .header h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .year-tabs {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-top: 1.25rem;
-        }
-
-        .year-tab {
-            appearance: none;
-            -webkit-appearance: none;
-            background: rgba(255, 255, 255, 0.16);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.45);
-            border-radius: 999px;
-            padding: 0.55rem 1.5rem;
-            font-size: 1.05rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .year-tab.active {
-            background: white;
-            color: #4c1d95;
-            border-color: white;
-        }
-
-        .year-tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.28);
-        }
-
-        .year-tab:focus-visible {
-            outline: 2px solid white;
-            outline-offset: 3px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .comp-note {
-            background: white;
-            border-radius: 15px;
-            padding: 1rem 1.5rem;
-            margin: 0 auto 1.5rem;
-            max-width: 860px;
-            text-align: center;
-            color: #2c3e50;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            font-weight: 600;
-        }
-
-        .comp-note[hidden] {
-            display: none;
-        }
-        
-        .stats-overview {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transform: translateY(0);
-            transition: transform 0.2s ease;
-            flex: 0 1 420px;
-            min-width: 260px;
-            max-width: 420px;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-title {
-            font-size: 0.9rem;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 0.25rem;
-        }
-        
-        .stat-change {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        
-        .positive { color: #27ae60; }
-        .negative { color: #e74c3c; }
-        .neutral { color: #95a5a6; }
-        
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .chart-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        }
-        
-        .chart-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .chart-note {
-            text-align: center;
-            color: #475569;
-            font-size: 0.95rem;
-            line-height: 1.45;
-            margin: -0.5rem auto 1.25rem;
-            max-width: 760px;
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 700px;
-        }
-        
-        .last-updated {
-            text-align: center;
-            margin-top: 2rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-        }
-        
-        .footer {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.8);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .load-error {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            text-align: center;
-            color: #2c3e50;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 640px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .header p {
-                font-size: 1rem;
-            }
-
-            .container {
-                padding: 1.25rem;
-            }
-
-            .stat-value {
-                font-size: 2rem;
-            }
-
-            .chart-title {
-                font-size: 1.2rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sunday Revenue Report · Brightwild</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    /* Colors follow the Brightwild design tokens (packages/design/styles/tokens.css). */
+    :root {
+      --bg: #f8f7f3;
+      --surface: #fcfcfc;
+      --text: #141414;
+      --text-2: rgba(20, 20, 20, 0.70);
+      --text-3: rgba(20, 20, 20, 0.56);
+      --border: rgba(20, 20, 20, 0.10);
+      --grid: rgba(20, 20, 20, 0.06);
+      --cy: #1469bc;
+      --stly: #5e5e5e;
+      --ly: #c4c4c4;
+      --up: #306b4b;
+      --down: #c8191f;
+      --tab-bg: rgba(20, 20, 20, 0.06);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --surface: #1b1b1b;
+        --text: #f3f3f3;
+        --text-2: rgba(243, 243, 243, 0.72);
+        --text-3: rgba(243, 243, 243, 0.56);
+        --border: rgba(243, 243, 243, 0.12);
+        --grid: rgba(243, 243, 243, 0.08);
+        --cy: #5b9be0;
+        --stly: #a1a1a1;
+        --ly: #4e4e4e;
+        --up: #6cc494;
+        --down: #ff7a72;
+        --tab-bg: rgba(243, 243, 243, 0.08);
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    header { padding: 32px 0 24px; border-bottom: 1px solid var(--border); }
+    .brand { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+    .title-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+    h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; }
+    .meta { color: var(--text-3); margin-top: 4px; }
+    .tabs { display: inline-flex; background: var(--tab-bg); border-radius: 8px; padding: 3px; gap: 2px; }
+    .tab {
+      appearance: none; border: 0; background: transparent; color: var(--text-2);
+      font: inherit; font-weight: 500; padding: 6px 18px; border-radius: 6px; cursor: pointer;
+    }
+    .tab[aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+    .tab:focus-visible { outline: 2px solid var(--cy); outline-offset: 2px; }
+    main { padding: 24px 0 48px; }
+    .summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+    .stat-label { color: var(--text-3); font-size: 12px; font-weight: 500; }
+    .stat-value { font-size: 24px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+    .legend { display: flex; gap: 20px; flex-wrap: wrap; color: var(--text-2); font-size: 13px; margin-bottom: 12px; }
+    .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 16px 8px; min-width: 0; }
+    .card.wide { grid-column: 1 / -1; }
+    .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .card h2 { font-size: 15px; font-weight: 600; }
+    .card-totals { color: var(--text-2); font-size: 13px; font-variant-numeric: tabular-nums; }
+    .note { color: var(--text-3); font-size: 12px; margin-top: 2px; }
+    .chart { position: relative; height: 420px; margin-top: 8px; }
+    .card.wide .chart { height: 480px; }
+    .up { color: var(--up); } .down { color: var(--down); }
+    .status { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; color: var(--text-2); text-align: center; }
+    footer { color: var(--text-3); font-size: 12px; padding: 16px 0 32px; border-top: 1px solid var(--border); }
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 480px) {
+      .wrap { padding: 0 16px; }
+      h1 { font-size: 22px; }
+      .stat-value { font-size: 20px; }
+      .chart, .card.wide .chart { height: 380px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <h1>📊 Damien's Sunday Reports</h1>
-        <p>Complete Portfolio + Unit Groups</p>
-        <p>Revenue Analysis Dashboard • Updated Every Sunday at 8:00 AM ET</p>
-        <div class="year-tabs" id="yearTabs" role="tablist" aria-label="Report year"></div>
+  <header>
+    <div class="wrap">
+      <div class="brand">Brightwild</div>
+      <div class="title-row">
+        <div>
+          <h1>Sunday Revenue Report</h1>
+          <p class="meta" id="meta">Loading…</p>
+        </div>
+        <div class="tabs" id="tabs" role="tablist" aria-label="Report year"></div>
+      </div>
     </div>
+  </header>
 
-    <div class="container">
-        <p class="comp-note" id="compNote" hidden></p>
+  <main class="wrap">
+    <div id="content"><div class="status">Loading revenue…</div></div>
+  </main>
 
-        <div class="stats-overview" id="statsOverview">
-            <div class="stat-card">
-                <div class="stat-title">Loading</div>
-                <div class="stat-value">…</div>
+  <footer>
+    <div class="wrap">
+      Source: BigQuery <code>brightwild_analytics_mart.units_nights_pacing</code>, refreshed daily.
+      CY is revenue on the books today. STLY is what was on the books 364 days ago for the same nights a year earlier. LY Final is those nights' final revenue.
+    </div>
+  </footer>
+
+  <script>
+    const fmt = (n) => {
+      const v = Number(n) || 0, a = Math.abs(v);
+      if (a >= 1e6) return `$${(v / 1e6).toFixed(a >= 1e7 ? 1 : 2)}M`;
+      if (a >= 1e3) return `$${Math.round(v / 1e3)}K`;
+      return `$${Math.round(v)}`;
+    };
+    const sum = (xs) => (xs || []).reduce((t, x) => t + (Number(x) || 0), 0);
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+    function pace(cy, base) {
+      if (!base) return null;
+      return (cy - base) / base;
+    }
+    function paceHtml(p) {
+      if (p == null) return "—";
+      const pct = `${p >= 0 ? "+" : ""}${(p * 100).toFixed(1)}%`;
+      return `<span class="${p >= 0 ? "up" : "down"}">${pct}</span>`;
+    }
+
+    let report = null;
+    let charts = [];
+
+    function renderTabs(active) {
+      const years = Object.keys(report.years).sort();
+      document.getElementById("tabs").innerHTML = years.map((y) =>
+        `<button class="tab" role="tab" data-year="${esc(y)}" aria-selected="${y === active}" tabindex="${y === active ? 0 : -1}">${esc(y)}</button>`
+      ).join("");
+    }
+
+    function chartFor(canvas, group, wide) {
+      const series = [
+        { label: "CY", data: group.cy, color: css("--cy") },
+        { label: "STLY", data: group.stly, color: css("--stly") },
+        { label: "LY Final", data: group.lyFinal, color: css("--ly") },
+      ];
+      const text = css("--text-2");
+      return new Chart(canvas, {
+        type: "bar",
+        data: {
+          labels: group.months,
+          datasets: series.map((s) => ({ label: s.label, data: s.data, backgroundColor: s.color, borderRadius: 2, barPercentage: 0.9, categoryPercentage: 0.8 })),
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          layout: { padding: { right: 44 } },
+          interaction: { mode: "index", intersect: false },
+          scales: {
+            x: { beginAtZero: true, grid: { color: css("--grid") }, border: { display: false }, ticks: { color: text, callback: (v) => fmt(v), maxTicksLimit: 6 } },
+            y: { grid: { display: false }, border: { display: false }, ticks: { color: text } },
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${fmt(c.parsed.x)}` } },
+          },
+        },
+        plugins: [{
+          id: "values",
+          afterDatasetsDraw(chart) {
+            const { ctx } = chart;
+            ctx.save();
+            ctx.font = `500 ${wide ? 10 : 9}px Inter, sans-serif`;
+            ctx.fillStyle = text;
+            ctx.textBaseline = "middle";
+            chart.data.datasets.forEach((d, i) => {
+              chart.getDatasetMeta(i).data.forEach((bar, j) => {
+                const v = Number(d.data[j]) || 0;
+                if (v > 0) ctx.fillText(fmt(v), bar.x + 4, bar.y);
+              });
+            });
+            ctx.restore();
+          },
+        }],
+      });
+    }
+
+    function renderYear(year) {
+      if (!report.years[year]) year = report.defaultYear;
+      renderTabs(year);
+      charts.forEach((c) => c.destroy());
+      charts = [];
+
+      const groups = report.years[year].unitGroups;
+      const all = groups.ALL_PROPERTIES;
+      const totals = all ? { cy: sum(all.cy), stly: sum(all.stly), ly: sum(all.lyFinal) } : null;
+      const summary = totals ? `
+        <div class="summary">
+          <div class="stat"><div class="stat-label">CY ${esc(year)} on the books</div><div class="stat-value">${fmt(totals.cy)}</div></div>
+          <div class="stat"><div class="stat-label">STLY</div><div class="stat-value">${fmt(totals.stly)}</div></div>
+          <div class="stat"><div class="stat-label">LY Final</div><div class="stat-value">${fmt(totals.ly)}</div></div>
+          <div class="stat"><div class="stat-label">Pace vs STLY</div><div class="stat-value">${paceHtml(pace(totals.cy, totals.stly))}</div></div>
+        </div>` : "";
+
+      const cards = Object.entries(groups).map(([key, g], i) => {
+        const cy = sum(g.cy), stly = sum(g.stly), ly = sum(g.lyFinal);
+        const notes = [];
+        if (!stly && ly) notes.push("No STLY: nothing was on the books a year ago.");
+        if (!stly && !ly) notes.push("No prior-year revenue.");
+        if (!cy && (stly || ly)) notes.push(`Nothing on the books for ${year}.`);
+        return `
+          <section class="card${key === "ALL_PROPERTIES" ? " wide" : ""}">
+            <div class="card-head">
+              <h2>${esc(g.name)}</h2>
+              <div class="card-totals">CY ${fmt(cy)} · STLY ${fmt(stly)} · LY ${fmt(ly)} · ${paceHtml(pace(cy, stly))}</div>
             </div>
+            ${notes.map((n) => `<p class="note">${esc(n)}</p>`).join("")}
+            <div class="chart"><canvas id="chart-${i}" aria-label="${esc(g.name)} ${esc(year)} revenue by month: CY, STLY and LY Final" role="img"></canvas></div>
+          </section>`;
+      }).join("");
+
+      document.getElementById("content").innerHTML = `${summary}
+        <div class="legend">
+          <span style="--c: var(--cy)">CY (on the books)</span>
+          <span style="--c: var(--stly)">STLY</span>
+          <span style="--c: var(--ly)">LY Final</span>
         </div>
+        <div class="grid">${cards}</div>`;
 
-        <div class="charts-grid" id="chartsGrid"></div>
+      Object.entries(groups).forEach(([key, g], i) => {
+        charts.push(chartFor(document.getElementById(`chart-${i}`), g, key === "ALL_PROPERTIES"));
+      });
+    }
 
-        <div class="last-updated" id="lastUpdated">
-            Last updated: Loading...
-        </div>
-    </div>
+    function selectedYear() {
+      const hash = decodeURIComponent(location.hash.slice(1));
+      return report.years[hash] ? hash : report.defaultYear;
+    }
 
-    <div class="footer">
-        <p>🤖 Automated by OB1 • Generated from BigQuery unit_calendar data • 🔥 The Holocron</p>
-    </div>
+    document.getElementById("tabs").addEventListener("click", (e) => {
+      const btn = e.target.closest(".tab");
+      if (btn) location.hash = btn.dataset.year;
+    });
+    document.getElementById("tabs").addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const years = Object.keys(report.years).sort();
+      const i = years.indexOf(selectedYear());
+      const next = years[(i + (e.key === "ArrowRight" ? 1 : -1) + years.length) % years.length];
+      location.hash = next;
+      requestAnimationFrame(() => document.querySelector(`.tab[data-year="${next}"]`)?.focus());
+    });
+    window.addEventListener("hashchange", () => report && renderYear(selectedYear()));
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => report && renderYear(selectedYear()));
 
-    <script>
-        // Generator contract (script lives outside this repo and overwrites data.json daily):
-        // - Render source is data.years[year].unitGroups. Top-level unitGroups is the legacy fallback.
-        // - Emit HOTEL_CABANA_COMPLEX for every year (full Hotel Cabana, every unit). Subset
-        //   groups for individual Hotel Cabana series are ignored even if they keep showing up.
-        // - 2026 currently has no complex group. Its full-complex current-year months are only present
-        //   as the 2027 comparison copy, so the page reconstructs that one series and omits prior-year comps.
-        // - When a comparison is a copy of another year's actuals, set
-        //   years[year].comparison = { kind: "placeholder", sourceYear: "2026", label: "2026 actual (placeholder comp)" }
-        //   and years[year].cyBasis = "otb". Set comparison.kind to "actual" once STLY / LY Final are real
-        //   so the page does not infer a placeholder from matching numbers.
-
-        let revenueData = null;
-        let yearMap = {};
-        let activeCharts = [];
-
-        const COLORS = {
-            cy: '#1e3a8a',
-            stly: '#3b82f6',
-            lyFinal: '#93c5fd'
-        };
-
-        const COMPLEX_KEYS = ['HOTEL_CABANA_COMPLEX', 'HOTEL_CABANA', 'HOTEL_CABANA_ALL', 'HC_COMPLEX'];
-
-        const CHART_ORDER = [
-            'ALL_PROPERTIES',
-            'KHE_ORIGINAL_10',
-            'GEMMA_4_UNITS',
-            'HOTEL_CABANA_COMPLEX',
-            '720_D_SIMONTON',
-            'KAMP_430_FLEMING',
-            'BEACHSIDE_ALL',
-            'LUNARA_BAY_ALL',
-            'CURRY_MANSION_ALL'
-        ];
-
-        const DISPLAY_NAMES = {
-            ALL_PROPERTIES: 'ALL PROPERTIES COMBINED',
-            KHE_ORIGINAL_10: 'KHE Original 10 Units',
-            GEMMA_4_UNITS: 'Gemma (4 Units)',
-            HOTEL_CABANA_COMPLEX: 'Hotel Cabana',
-            HOTEL_CABANA: 'Hotel Cabana',
-            HOTEL_CABANA_ALL: 'Hotel Cabana',
-            HC_COMPLEX: 'Hotel Cabana',
-            '720_D_SIMONTON': '720 D Simonton',
-            KAMP_430_FLEMING: 'Kamp (430 Fleming)',
-            BEACHSIDE_ALL: 'Beachside All',
-            LUNARA_BAY_ALL: 'Lunara Bay All',
-            CURRY_MANSION_ALL: 'Curry Mansion All'
-        };
-
-        function escapeHtml(value) {
-            return String(value).replace(/[&<>"']/g, character => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
-            }[character]));
-        }
-
-        function sum(values) {
-            if (!Array.isArray(values)) return 0;
-            return values.reduce((total, value) => total + (Number(value) || 0), 0);
-        }
-
-        function numArray(values) {
-            if (!Array.isArray(values)) return [];
-            return values.map(value => Number(value) || 0);
-        }
-
-        function arraysEqual(left, right) {
-            if (!Array.isArray(left) || !Array.isArray(right) || left.length !== right.length || left.length === 0) {
-                return false;
-            }
-            for (let index = 0; index < left.length; index += 1) {
-                if (Number(left[index]) !== Number(right[index])) return false;
-            }
-            return true;
-        }
-
-        function compareYears(left, right) {
-            const leftNumber = Number(left);
-            const rightNumber = Number(right);
-            if (Number.isFinite(leftNumber) && Number.isFinite(rightNumber)) return leftNumber - rightNumber;
-            return String(left).localeCompare(String(right));
-        }
-
-        function groupsOf(entry) {
-            if (!entry || typeof entry !== 'object') return {};
-            if (entry.unitGroups && typeof entry.unitGroups === 'object') return entry.unitGroups;
-            const values = Object.values(entry);
-            if (entry.ALL_PROPERTIES || values.some(value => value && Array.isArray(value.cy))) return entry;
-            return {};
-        }
-
-        function isComplexGroup(key, group) {
-            if (COMPLEX_KEYS.includes(key)) return true;
-            const name = String((group && group.name) || '');
-            if (!/hotel\s*cabana/i.test(name)) return false;
-            if (/HC\s*50/i.test(name) || /\bHC\s*\d+/.test(name)) return false;
-            return true;
-        }
-
-        function isHiddenGroup(key, group) {
-            if (isComplexGroup(key, group)) return false;
-            const name = String((group && group.name) || '');
-            if (/HC[_-]?50/i.test(key) || /HC[_-]?\d+_UNITS/i.test(key) || /^HC[_-]?\d+$/i.test(key)) return true;
-            if (/HC\s*50/i.test(name) || /^HC\s*\d+/.test(name) || /\bHC\s*\d+\b/.test(name)) return true;
-            return false;
-        }
-
-        function findComplexKey(groups) {
-            for (const key of COMPLEX_KEYS) {
-                if (groups[key] && isComplexGroup(key, groups[key])) return key;
-            }
-            for (const key of Object.keys(groups)) {
-                if (isComplexGroup(key, groups[key]) && !isHiddenGroup(key, groups[key])) return key;
-            }
-            return null;
-        }
-
-        function explicitComparison(entry) {
-            if (!entry || typeof entry !== 'object') return null;
-            const comparison = entry.comparison || entry.comp;
-            if (!comparison || typeof comparison !== 'object') return null;
-            const kind = String(comparison.kind || comparison.type || '').toLowerCase();
-            if (kind === 'actual' || kind === 'real' || comparison.placeholder === false) {
-                return { forceActual: true };
-            }
-            if (kind === 'placeholder' || comparison.placeholder === true) {
-                const sourceYear = comparison.sourceYear || comparison.source || comparison.baseYear;
-                const label = comparison.label || (sourceYear ? `${sourceYear} actual (placeholder comp)` : 'Placeholder comp');
-                return {
-                    sourceYear: sourceYear != null ? String(sourceYear) : null,
-                    label: String(label)
-                };
-            }
-            return null;
-        }
-
-        function detectPlaceholder(year, map) {
-            const entry = map[year] || {};
-            const explicit = explicitComparison(entry);
-            if (explicit) return explicit.forceActual ? null : explicit;
-
-            const groups = groupsOf(entry);
-            const comparable = Object.keys(groups).filter(key => {
-                const group = groups[key];
-                return group && Array.isArray(group.stly) && Array.isArray(group.lyFinal) && group.stly.length && group.lyFinal.length;
-            });
-            if (!comparable.length || !comparable.every(key => arraysEqual(groups[key].stly, groups[key].lyFinal))) return null;
-
-            for (const sourceYear of Object.keys(map).sort(compareYears)) {
-                if (sourceYear === year) continue;
-                const sourceGroups = groupsOf(map[sourceYear]);
-                const shared = comparable.filter(key => sourceGroups[key] && Array.isArray(sourceGroups[key].cy) && sourceGroups[key].cy.length);
-                if (shared.length < 3) continue;
-                const matched = shared.filter(key => arraysEqual(groups[key].stly, sourceGroups[key].cy));
-                const allPropertiesMatch = !groups.ALL_PROPERTIES || !sourceGroups.ALL_PROPERTIES
-                    || arraysEqual(groups.ALL_PROPERTIES.stly, sourceGroups.ALL_PROPERTIES.cy);
-                if (allPropertiesMatch && matched.length === shared.length) {
-                    return {
-                        sourceYear,
-                        label: `${sourceYear} actual (placeholder comp)`
-                    };
-                }
-            }
-            return null;
-        }
-
-        function isOnTheBooks(year, entry, placeholder) {
-            const basis = entry && (entry.cyBasis || entry.basis);
-            if (basis === 'otb' || basis === 'on-the-books') return true;
-            if (basis === 'actual' || basis === 'cy') return false;
-            if (placeholder) return true;
-            const yearNumber = Number(year);
-            const defaultYear = revenueData && revenueData.defaultYear != null ? Number(revenueData.defaultYear) : NaN;
-            if (Number.isFinite(yearNumber) && Number.isFinite(defaultYear) && yearNumber > defaultYear) return true;
-            if (Number.isFinite(yearNumber) && yearNumber > new Date().getFullYear()) return true;
-            return false;
-        }
-
-        function deriveComplex(year, map) {
-            for (const otherYear of Object.keys(map)) {
-                if (otherYear === year) continue;
-                const otherGroups = groupsOf(map[otherYear]);
-                const complexKey = findComplexKey(otherGroups);
-                if (!complexKey) continue;
-                const placeholder = detectPlaceholder(otherYear, map);
-                if (!placeholder || String(placeholder.sourceYear) !== String(year)) continue;
-                const source = otherGroups[complexKey];
-                if (!arraysEqual(source.stly, source.lyFinal)) continue;
-                return {
-                    key: complexKey,
-                    derived: true,
-                    note: `Full Hotel Cabana (all units). The ${year} data has no Hotel Cabana complex group, so these bars use the ${year} actuals stored on the ${otherYear} comparison. Prior-year comps are not in the data and are omitted.`,
-                    group: {
-                        name: source.name || 'Hotel Cabana',
-                        months: source.months,
-                        cy: source.stly.slice(),
-                        stly: [],
-                        lyFinal: [],
-                        compsUnavailable: true
-                    }
-                };
-            }
-            return null;
-        }
-
-        function buildCharts(year, map) {
-            const source = groupsOf(map[year]);
-            const groups = {};
-            Object.keys(source).forEach(key => {
-                if (!isHiddenGroup(key, source[key])) groups[key] = source[key];
-            });
-
-            let complexKey = findComplexKey(groups);
-            let derivedNote = '';
-            let derived = false;
-            if (!complexKey) {
-                const reconstructed = deriveComplex(year, map);
-                if (reconstructed) {
-                    complexKey = reconstructed.key;
-                    groups[complexKey] = reconstructed.group;
-                    derived = true;
-                    derivedNote = reconstructed.note;
-                }
-            }
-
-            const ordered = [];
-            CHART_ORDER.forEach(key => {
-                if (key === 'HOTEL_CABANA_COMPLEX') {
-                    if (complexKey && groups[complexKey]) ordered.push(complexKey);
-                    else ordered.push('__MISSING_HOTEL__');
-                } else if (groups[key]) {
-                    ordered.push(key);
-                }
-            });
-            Object.keys(groups).forEach(key => {
-                if (complexKey && key !== complexKey && isComplexGroup(key, groups[key])) return;
-                if (!ordered.includes(key) && key !== complexKey) ordered.push(key);
-            });
-
-            return ordered.map(key => {
-                if (key === '__MISSING_HOTEL__') {
-                    return { key: 'HOTEL_CABANA_COMPLEX', missing: true, year };
-                }
-                return {
-                    key,
-                    group: groups[key],
-                    derived: key === complexKey && derived,
-                    note: key === complexKey && derived ? derivedNote : '',
-                    year
-                };
-            });
-        }
-
-        function chartTitle(model) {
-            const name = DISPLAY_NAMES[model.key] || (model.group && model.group.name) || 'Hotel Cabana';
-            const prefix = model.key === 'ALL_PROPERTIES' ? '🏆 ' : '';
-            return `${prefix}${name} - ${model.year} Revenue Analysis`;
-        }
-
-        function missingHotelNote(year) {
-            return `Hotel Cabana (full complex) is not in the ${year} data, and it cannot be built from the groups in this file. Partial Hotel Cabana groups are hidden. The data generator needs to emit a full-complex group for ${year}.`;
-        }
-
-        function datasetsFor(group, mode) {
-            const current = numArray(group.cy);
-            const stly = numArray(group.stly);
-            const lyFinal = numArray(group.lyFinal);
-            if (group.compsUnavailable) {
-                return [{ label: mode.cyLabel, data: current, color: COLORS.cy }];
-            }
-            if (mode.placeholder) {
-                if (arraysEqual(stly, lyFinal)) {
-                    return [
-                        { label: mode.cyLabel, data: current, color: COLORS.cy },
-                        { label: mode.placeholder.label, data: stly, color: COLORS.stly }
-                    ];
-                }
-                return [
-                    { label: mode.cyLabel, data: current, color: COLORS.cy },
-                    { label: `${mode.placeholder.label} (first series)`, data: stly, color: COLORS.stly },
-                    { label: `${mode.placeholder.label} (second series)`, data: lyFinal, color: COLORS.lyFinal }
-                ];
-            }
-            return [
-                { label: mode.cyLabel, data: current, color: COLORS.cy },
-                { label: 'STLY', data: stly, color: COLORS.stly },
-                { label: 'LY Final', data: lyFinal, color: COLORS.lyFinal }
-            ];
-        }
-
-        function formatCurrency(value) {
-            const amount = Number(value) || 0;
-            if (Math.abs(amount) >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
-            if (Math.abs(amount) >= 1000) return `$${(amount / 1000).toFixed(0)}K`;
-            return `$${amount.toFixed(0)}`;
-        }
-
-        function destroyCharts() {
-            activeCharts.forEach(chart => {
-                try { chart.destroy(); } catch (error) { /* canvas already gone */ }
-            });
-            activeCharts = [];
-        }
-
-        function createChart(canvas, group, mode) {
-            if (!canvas || typeof Chart === 'undefined') return;
-            const datasets = datasetsFor(group, mode);
-            const chart = new Chart(canvas.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: group.months || ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                    datasets: datasets.map(dataset => ({
-                        label: dataset.label,
-                        data: dataset.data,
-                        backgroundColor: dataset.color,
-                        borderColor: dataset.color,
-                        borderWidth: 0
-                    }))
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            stacked: false,
-                            ticks: {
-                                callback: value => formatCurrency(value)
-                            },
-                            grid: { color: '#f3f4f6' }
-                        },
-                        y: {
-                            stacked: false,
-                            grid: { display: false }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: context => `${context.dataset.label}: ${formatCurrency(context.parsed.x)}`
-                            }
-                        }
-                    },
-                    elements: {
-                        bar: { borderWidth: 0 }
-                    }
-                },
-                plugins: [{
-                    id: 'valueLabels',
-                    afterDatasetsDraw(chartInstance) {
-                        const ctx = chartInstance.ctx;
-                        chartInstance.data.datasets.forEach((dataset, datasetIndex) => {
-                            const meta = chartInstance.getDatasetMeta(datasetIndex);
-                            meta.data.forEach((bar, index) => {
-                                const value = Number(dataset.data[index]) || 0;
-                                if (value <= 0) return;
-                                ctx.save();
-                                ctx.font = 'bold 11px Arial';
-                                ctx.textAlign = 'left';
-                                ctx.textBaseline = 'middle';
-                                const text = formatCurrency(value);
-                                const textWidth = ctx.measureText(text).width;
-                                const x = bar.x + 8;
-                                const y = bar.y;
-                                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                                ctx.fillRect(x - 3, y - 8, textWidth + 6, 16);
-                                ctx.fillStyle = '#000';
-                                ctx.fillText(text, x, y);
-                                ctx.restore();
-                            });
-                        });
-                    }
-                }]
-            });
-            activeCharts.push(chart);
-        }
-
-        function renderStats(year, entry, placeholder) {
-            const container = document.getElementById('statsOverview');
-            const allProperties = groupsOf(entry).ALL_PROPERTIES;
-            if (!allProperties) {
-                container.innerHTML = '<div class="stat-card"><div class="stat-title">Portfolio total</div><div class="stat-value">—</div><div class="stat-change neutral">All-properties total is not in this file.</div></div>';
-                return;
-            }
-
-            const totalCurrent = sum(allProperties.cy);
-            const totalComparison = sum(allProperties.stly);
-            const cards = [];
-
-            if (placeholder) {
-                cards.push({
-                    title: `Total OTB Revenue (${year})`,
-                    value: formatCurrency(totalCurrent),
-                    change: 'On the books. Pace versus last year is not shown.',
-                    changeClass: 'neutral'
-                });
-                const sameComparison = arraysEqual(allProperties.stly, allProperties.lyFinal);
-                cards.push({
-                    title: placeholder.label,
-                    value: sameComparison ? formatCurrency(totalComparison) : '—',
-                    change: sameComparison
-                        ? `Full-year ${placeholder.sourceYear || 'prior-year'} revenue used as the comparison. Not a same-time pace.`
-                        : 'The comparison series do not match, so no pace percent is shown.',
-                    changeClass: 'neutral'
-                });
-            } else {
-                const onTheBooks = isOnTheBooks(year, entry, placeholder);
-                let change = 'No STLY comparison';
-                let changeClass = 'neutral';
-                if (totalComparison > 0) {
-                    const percent = ((totalCurrent - totalComparison) / totalComparison * 100).toFixed(1);
-                    change = `${percent}% vs STLY`;
-                    changeClass = Number(percent) >= 0 ? 'positive' : 'negative';
-                }
-                cards.push({
-                    title: onTheBooks ? `Total OTB Revenue (${year})` : `Total CY Revenue (${year})`,
-                    value: formatCurrency(totalCurrent),
-                    change,
-                    changeClass
-                });
-            }
-
-            container.innerHTML = cards.map(card => `
-                <div class="stat-card">
-                    <div class="stat-title">${escapeHtml(card.title)}</div>
-                    <div class="stat-value">${escapeHtml(card.value)}</div>
-                    <div class="stat-change ${card.changeClass}">${escapeHtml(card.change)}</div>
-                </div>
-            `).join('');
-        }
-
-        function renderCharts(year, map, mode) {
-            const grid = document.getElementById('chartsGrid');
-            destroyCharts();
-            const models = buildCharts(year, map);
-            grid.innerHTML = models.map(model => {
-                const title = escapeHtml(chartTitle(model));
-                if (model.missing) {
-                    return `
-                        <div class="chart-card" data-group="HOTEL_CABANA_COMPLEX" data-missing="true">
-                            <div class="chart-title">${title}</div>
-                            <p class="chart-note">${escapeHtml(missingHotelNote(year))}</p>
-                        </div>
-                    `;
-                }
-                const note = model.note ? `<p class="chart-note">${escapeHtml(model.note)}</p>` : '';
-                const canvasId = `chart-${String(model.key).replace(/[^A-Za-z0-9_-]/g, '_')}`;
-                return `
-                    <div class="chart-card" data-group="${escapeHtml(model.key)}" data-derived="${model.derived ? 'true' : 'false'}">
-                        <div class="chart-title">${title}</div>
-                        ${note}
-                        <div class="chart-container">
-                            <canvas id="${canvasId}"></canvas>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            models.forEach(model => {
-                if (model.missing) return;
-                const canvasId = `chart-${String(model.key).replace(/[^A-Za-z0-9_-]/g, '_')}`;
-                createChart(document.getElementById(canvasId), model.group, mode);
-            });
-        }
-
-        function renderYear(year) {
-            if (!yearMap[year]) return;
-            const entry = yearMap[year];
-            const placeholder = detectPlaceholder(year, yearMap);
-            const mode = {
-                placeholder,
-                cyLabel: isOnTheBooks(year, entry, placeholder) ? `${year} OTB` : `${year} Rev`
-            };
-            document.body.dataset.year = year;
-
-            const tabs = document.getElementById('yearTabs');
-            tabs.innerHTML = Object.keys(yearMap).sort(compareYears).map(candidate => `
-                <button type="button" class="year-tab${candidate === year ? ' active' : ''}" role="tab" aria-selected="${candidate === year}" data-year="${escapeHtml(candidate)}">${escapeHtml(candidate)}</button>
-            `).join('');
-
-            const note = document.getElementById('compNote');
-            if (placeholder) {
-                note.hidden = false;
-                note.textContent = `${year} revenue is on the books (OTB). The comparison is ${placeholder.label}, not same-time last year. A year-over-year pace percent is not shown.`;
-            } else {
-                note.hidden = true;
-                note.textContent = '';
-            }
-
-            renderStats(year, entry, placeholder);
-            renderCharts(year, yearMap, mode);
-        }
-
-        function selectedYearFromLocation() {
-            const hash = decodeURIComponent((location.hash || '').replace(/^#/, ''));
-            if (yearMap[hash]) return hash;
-            const preferred = revenueData && revenueData.defaultYear != null ? String(revenueData.defaultYear) : '';
-            if (yearMap[preferred]) return preferred;
-            return Object.keys(yearMap).sort(compareYears)[0];
-        }
-
-        function buildYearMap(data) {
-            if (data.years && typeof data.years === 'object' && Object.keys(data.years).length) {
-                const map = {};
-                Object.keys(data.years).forEach(year => {
-                    map[String(year)] = data.years[year];
-                });
-                return map;
-            }
-            const year = data.defaultYear != null ? String(data.defaultYear) : 'Current';
-            return { [year]: { unitGroups: data.unitGroups || {} } };
-        }
-
-        function updateLastUpdated() {
-            const element = document.getElementById('lastUpdated');
-            const date = new Date(revenueData.lastUpdated || Date.now());
-            element.textContent = Number.isNaN(date.getTime())
-                ? 'Last updated: unknown'
-                : `Last updated: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-        }
-
-        function showLoadError() {
-            document.getElementById('statsOverview').innerHTML = '<div class="load-error">Revenue data could not be loaded. Refresh the page once data.json is available.</div>';
-            document.getElementById('lastUpdated').textContent = 'Last updated: unavailable';
-        }
-
-        async function loadData() {
-            try {
-                const response = await fetch('data.json');
-                if (!response.ok) throw new Error(`data.json returned ${response.status}`);
-                revenueData = await response.json();
-                yearMap = buildYearMap(revenueData);
-                updateLastUpdated();
-                renderYear(selectedYearFromLocation());
-            } catch (error) {
-                console.error('Error loading data:', error);
-                showLoadError();
-            }
-        }
-
-        document.getElementById('yearTabs').addEventListener('click', event => {
-            const button = event.target.closest('.year-tab');
-            if (!button) return;
-            const year = button.getAttribute('data-year');
-            if (!yearMap[year]) return;
-            if (location.hash === `#${year}`) renderYear(year);
-            else location.hash = year;
-        });
-
-        document.getElementById('yearTabs').addEventListener('keydown', event => {
-            if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
-            const years = Object.keys(yearMap).sort(compareYears);
-            const current = document.body.dataset.year;
-            const index = years.indexOf(current);
-            if (index === -1) return;
-            const direction = event.key === 'ArrowRight' ? 1 : -1;
-            const next = years[(index + direction + years.length) % years.length];
-            location.hash = next;
-        });
-
-        window.addEventListener('hashchange', () => {
-            if (!revenueData) return;
-            renderYear(selectedYearFromLocation());
-        });
-
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadData);
-        else loadData();
-    </script>
+    (async () => {
+      try {
+        const res = await fetch("/api/data");
+        if (!res.ok) throw new Error(`/api/data returned ${res.status}`);
+        report = await res.json();
+        const snap = report.snapshotDate
+          ? new Date(`${report.snapshotDate}T12:00:00`).toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" })
+          : "unknown";
+        document.getElementById("meta").textContent = `Revenue on the books as of ${snap}`;
+        renderYear(selectedYear());
+      } catch (err) {
+        console.error(err);
+        document.getElementById("meta").textContent = "Data unavailable";
+        document.getElementById("content").innerHTML = `<div class="status">Revenue data could not be loaded. Try again in a minute.</div>`;
+      }
+    })();
+  </script>
 </body>
 </html>
