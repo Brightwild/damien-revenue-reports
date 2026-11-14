@@ -69,7 +69,7 @@
     .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
     .stat-label { color: var(--text-3); font-size: 12px; font-weight: 500; }
     .stat-value { font-size: 24px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
-    .legend { display: flex; gap: 20px; flex-wrap: wrap; color: var(--text-2); font-size: 13px; margin-bottom: 12px; }
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--text-2); font-size: 12px; margin-top: 6px; }
     .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
     .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 16px 8px; min-width: 0; }
@@ -217,6 +217,12 @@
           <div class="stat"><div class="stat-label">Pace vs STLY</div><div class="stat-value">${paceHtml(pace(totals.cy, totals.stly))}</div></div>
         </div>` : "";
 
+      const legendHtml = `
+        <div class="legend" aria-hidden="true">
+          <span style="--c: var(--cy)">CY ${esc(year)} (on the books)</span>
+          <span style="--c: var(--stly)">STLY</span>
+          <span style="--c: var(--ly)">LY Final</span>
+        </div>`;
       const cards = Object.entries(groups).map(([key, g], i) => {
         const cy = sum(g.cy), stly = sum(g.stly), ly = sum(g.lyFinal);
         const notes = [];
@@ -229,17 +235,13 @@
               <h2>${esc(g.name)}</h2>
               <div class="card-totals">CY ${fmt(cy)} · STLY ${fmt(stly)} · LY ${fmt(ly)} · ${paceHtml(pace(cy, stly))}</div>
             </div>
+            ${legendHtml}
             ${notes.map((n) => `<p class="note">${esc(n)}</p>`).join("")}
             <div class="chart"><canvas id="chart-${i}" aria-label="${esc(g.name)} ${esc(year)} revenue by month: CY, STLY and LY Final" role="img"></canvas></div>
           </section>`;
       }).join("");
 
       document.getElementById("content").innerHTML = `${summary}
-        <div class="legend">
-          <span style="--c: var(--cy)">CY (on the books)</span>
-          <span style="--c: var(--stly)">STLY</span>
-          <span style="--c: var(--ly)">LY Final</span>
-        </div>
         <div class="grid">${cards}</div>`;
 
       Object.entries(groups).forEach(([key, g], i) => {
