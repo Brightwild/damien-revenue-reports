@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="color-scheme" content="light">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sunday Revenue Report · Brightwild</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,23 +25,8 @@
       --up: #306b4b;
       --down: #c8191f;
       --tab-bg: rgba(20, 20, 20, 0.06);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #121212;
-        --surface: #1b1b1b;
-        --text: #f3f3f3;
-        --text-2: rgba(243, 243, 243, 0.72);
-        --text-3: rgba(243, 243, 243, 0.56);
-        --border: rgba(243, 243, 243, 0.12);
-        --grid: rgba(243, 243, 243, 0.08);
-        --cy: #5b9be0;
-        --stly: #a1a1a1;
-        --ly: #4e4e4e;
-        --up: #6cc494;
-        --down: #ff7a72;
-        --tab-bg: rgba(243, 243, 243, 0.08);
-      }
+      /* Always light: the report is read and screenshotted as a light page. */
+      color-scheme: light;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -170,14 +156,16 @@
           maintainAspectRatio: false,
           animation: false,
           layout: { padding: { right: 44 } },
-          interaction: { mode: "index", intersect: false },
+          // Bars run horizontally, so hover must resolve the month from the
+          // vertical position; the default (x) picks a month by bar length.
+          interaction: { mode: "index", axis: "y", intersect: false },
           scales: {
             x: { beginAtZero: true, grid: { color: css("--grid") }, border: { display: false }, ticks: { color: text, callback: (v) => fmt(v), maxTicksLimit: 6 } },
             y: { grid: { display: false }, border: { display: false }, ticks: { color: text } },
           },
           plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${fmt(c.parsed.x)}` } },
+            tooltip: { mode: "index", axis: "y", intersect: false, callbacks: { label: (c) => `${c.dataset.label}: ${fmt(c.parsed.x)}` } },
           },
         },
         plugins: [{
@@ -267,7 +255,6 @@
       requestAnimationFrame(() => document.querySelector(`.tab[data-year="${next}"]`)?.focus());
     });
     window.addEventListener("hashchange", () => report && renderYear(selectedYear()));
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => report && renderYear(selectedYear()));
 
     (async () => {
       try {
