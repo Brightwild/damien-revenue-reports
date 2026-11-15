@@ -1,14 +1,13 @@
 {
   "name": "damien-revenue-reports",
-  "version": "1.0.0",
-  "description": "Automated Sunday revenue reports dashboard for Damien",
-  "main": "index.html",
+  "private": true,
+  "description": "Sunday revenue report: CY, STLY and LY Final by property group, read live from BigQuery",
+  "engines": { "node": ">=20" },
   "scripts": {
-    "dev": "python3 -m http.server 3000",
-    "build": "echo 'Static site - no build required'",
-    "start": "python3 -m http.server 3000"
+    "build": "echo 'Static page in public/ plus the api/data function'",
+    "test": "node --test"
   },
-  "keywords": ["revenue", "reports", "dashboard", "brightwild"],
-  "author": "OB1",
-  "license": "MIT"
+  "dependencies": {
+    "@google-cloud/bigquery": "^7.9.1"
+  }
 }
