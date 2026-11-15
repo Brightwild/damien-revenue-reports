@@ -33,15 +33,15 @@
       background: var(--bg);
       color: var(--text);
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
     .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
     header { padding: 32px 0 24px; border-bottom: 1px solid var(--border); }
-    .brand { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+    .brand { font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
     .title-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
-    h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; }
+    h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.01em; }
     .meta { color: var(--text-3); margin-top: 4px; }
     .tabs { display: inline-flex; background: var(--tab-bg); border-radius: 8px; padding: 3px; gap: 2px; }
     .tab {
@@ -53,31 +53,31 @@
     main { padding: 24px 0 48px; }
     .summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
     .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
-    .stat-label { color: var(--text-3); font-size: 12px; font-weight: 500; }
-    .stat-value { font-size: 24px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
-    .legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--text-2); font-size: 12px; margin-top: 6px; }
+    .stat-label { color: var(--text-3); font-size: 14px; font-weight: 500; }
+    .stat-value { font-size: 28px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--text-2); font-size: 14px; margin-top: 6px; }
     .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
     .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 16px 8px; min-width: 0; }
     .card.wide { grid-column: 1 / -1; }
     .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-    .card h2 { font-size: 15px; font-weight: 600; }
-    .card-totals { color: var(--text-2); font-size: 13px; font-variant-numeric: tabular-nums; }
-    .note { color: var(--text-3); font-size: 12px; margin-top: 2px; }
-    .chart { position: relative; height: 420px; margin-top: 8px; }
-    .card.wide .chart { height: 480px; }
+    .card h2 { font-size: 18px; font-weight: 600; }
+    .card-totals { color: var(--text-2); font-size: 15px; font-variant-numeric: tabular-nums; }
+    .note { color: var(--text-3); font-size: 14px; margin-top: 2px; }
+    .chart { position: relative; height: 480px; margin-top: 8px; }
+    .card.wide .chart { height: 540px; }
     .up { color: var(--up); } .down { color: var(--down); }
     .status { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; color: var(--text-2); text-align: center; }
-    footer { color: var(--text-3); font-size: 12px; padding: 16px 0 32px; border-top: 1px solid var(--border); }
+    footer { color: var(--text-3); font-size: 13px; padding: 16px 0 32px; border-top: 1px solid var(--border); }
     @media (max-width: 860px) {
       .grid { grid-template-columns: 1fr; }
       .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 480px) {
       .wrap { padding: 0 16px; }
-      h1 { font-size: 22px; }
-      .stat-value { font-size: 20px; }
-      .chart, .card.wide .chart { height: 380px; }
+      h1 { font-size: 26px; }
+      .stat-value { font-size: 23px; }
+      .chart, .card.wide .chart { height: 440px; }
     }
   </style>
 </head>
@@ -137,6 +137,10 @@
       ).join("");
     }
 
+    // Axis ticks, tooltips and labels default to 12px; match the page's larger type.
+    Chart.defaults.font.family = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    Chart.defaults.font.size = 14;
+
     function chartFor(canvas, group, wide) {
       const series = [
         { label: "CY", data: group.cy, color: css("--cy") },
@@ -155,7 +159,7 @@
           responsive: true,
           maintainAspectRatio: false,
           animation: false,
-          layout: { padding: { right: 44 } },
+          layout: { padding: { right: 56 } },
           // Bars run horizontally, so hover must resolve the month from the
           // vertical position; the default (x) picks a month by bar length.
           interaction: { mode: "index", axis: "y", intersect: false },
@@ -173,7 +177,7 @@
           afterDatasetsDraw(chart) {
             const { ctx } = chart;
             ctx.save();
-            ctx.font = `500 ${wide ? 10 : 9}px Inter, sans-serif`;
+            ctx.font = `500 ${wide ? 12 : 11}px Inter, sans-serif`;
             ctx.fillStyle = text;
             ctx.textBaseline = "middle";
             chart.data.datasets.forEach((d, i) => {
